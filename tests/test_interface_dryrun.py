@@ -104,7 +104,7 @@ def test_criterion3_no_prohibited_imports(py_file: str):
 
 
 # ---------------------------------------------------------------------------
-# Criterion 2: Interface Functions Dry-Run & [CALL] Trace Verification
+# Criterion 2: Interface Functions Dry-Run & Clean Invocation Verification
 # ---------------------------------------------------------------------------
 # We test all 29 interface functions across core/, algorithms/, and main.py
 
@@ -114,7 +114,7 @@ def test_dryrun_core_io_read_wav():
     sig, fs = res
     assert isinstance(sig, np.ndarray)
     assert fs == 16000
-    assert "[CALL] read_wav" in out, f"Missing '[CALL] read_wav' trace! Captured output: {repr(out)}"
+    assert "[CALL] read_wav" not in out, f"Noisy '[CALL] read_wav' trace was not commented out!"
 
 
 def test_dryrun_core_io_read_lab():
@@ -122,14 +122,14 @@ def test_dryrun_core_io_read_lab():
     res, out = run_and_capture(core.io_utils.read_lab, lab_path)
     assert isinstance(res, list)
     assert len(res) > 0
-    assert "[CALL] read_lab" in out, f"Missing '[CALL] read_lab' trace! Captured output: {repr(out)}"
+    assert "[CALL] read_lab" not in out, f"Noisy '[CALL] read_lab' trace was not commented out!"
 
 
 def test_dryrun_core_io_get_speech_groundtruth():
     mock_segments = [(0.0, 0.5, "sil"), (0.5, 2.5, "v"), (2.5, 3.0, "sil")]
     res, out = run_and_capture(core.io_utils.get_speech_groundtruth, mock_segments)
     assert res == (0.5, 2.5)
-    assert "[CALL] get_speech_groundtruth" in out, f"Missing '[CALL] get_speech_groundtruth' trace! Captured output: {repr(out)}"
+    assert "[CALL] get_speech_groundtruth" not in out, f"Noisy '[CALL] get_speech_groundtruth' trace was not commented out!"
 
 
 def test_dryrun_core_features_frame_signal():
@@ -138,7 +138,7 @@ def test_dryrun_core_features_frame_signal():
     frames, times = res
     assert frames.ndim == 2
     assert len(frames) == len(times)
-    assert "[CALL] frame_signal" in out, f"Missing '[CALL] frame_signal' trace! Captured output: {repr(out)}"
+    assert "[CALL] frame_signal" not in out, f"Noisy '[CALL] frame_signal' trace was not commented out!"
 
 
 def test_dryrun_core_features_compute_ste():
@@ -146,14 +146,14 @@ def test_dryrun_core_features_compute_ste():
     res, out = run_and_capture(core.features.compute_ste, dummy_frames)
     assert isinstance(res, np.ndarray)
     assert len(res) == 5
-    assert "[CALL] compute_ste" in out, f"Missing '[CALL] compute_ste' trace! Captured output: {repr(out)}"
+    assert "[CALL] compute_ste" not in out, f"Noisy '[CALL] compute_ste' trace was not commented out!"
 
 
 def test_dryrun_core_features_normalize_ste():
     dummy_ste = np.array([10.0, 50.0, 100.0], dtype=np.float64)
     res, out = run_and_capture(core.features.normalize_ste, dummy_ste)
     assert np.isclose(np.max(res), 1.0)
-    assert "[CALL] normalize_ste" in out, f"Missing '[CALL] normalize_ste' trace! Captured output: {repr(out)}"
+    assert "[CALL] normalize_ste" not in out, f"Noisy '[CALL] normalize_ste' trace was not commented out!"
 
 
 def test_dryrun_core_features_extract_ste_features():
@@ -161,21 +161,21 @@ def test_dryrun_core_features_extract_ste_features():
     res, out = run_and_capture(core.features.extract_ste_features, dummy_signal, 16000)
     ste_norm, times = res
     assert len(ste_norm) == len(times)
-    assert "[CALL] extract_ste_features" in out, f"Missing '[CALL] extract_ste_features' trace! Captured output: {repr(out)}"
+    assert "[CALL] extract_ste_features" not in out, f"Noisy '[CALL] extract_ste_features' trace was not commented out!"
 
 
 def test_dryrun_core_postprocess_apply_threshold():
     dummy_ste = np.array([0.01, 0.05, 0.1], dtype=np.float64)
     res, out = run_and_capture(core.postprocess.apply_threshold, dummy_ste, 0.04)
     assert np.array_equal(res, np.array([0, 1, 1]))
-    assert "[CALL] apply_threshold" in out, f"Missing '[CALL] apply_threshold' trace! Captured output: {repr(out)}"
+    assert "[CALL] apply_threshold" not in out, f"Noisy '[CALL] apply_threshold' trace was not commented out!"
 
 
 def test_dryrun_core_postprocess_remove_short_silences_200ms():
     decisions = np.array([1, 1, 0, 0, 0, 1, 1], dtype=np.int32)
     res, out = run_and_capture(core.postprocess.remove_short_silences_200ms, decisions, 10.0, 200.0)
     assert np.all(res == 1)
-    assert "[CALL] remove_short_silences_200ms" in out, f"Missing '[CALL] remove_short_silences_200ms' trace! Captured output: {repr(out)}"
+    assert "[CALL] remove_short_silences_200ms" not in out, f"Noisy '[CALL] remove_short_silences_200ms' trace was not commented out!"
 
 
 def test_dryrun_core_postprocess_extract_speech_boundaries():
@@ -183,7 +183,7 @@ def test_dryrun_core_postprocess_extract_speech_boundaries():
     times = np.array([0.01, 0.02, 0.03, 0.04, 0.05])
     res, out = run_and_capture(core.postprocess.extract_speech_boundaries, decisions, times, 10.0, 20.0)
     assert res == (0.01, 0.05)
-    assert "[CALL] extract_speech_boundaries" in out, f"Missing '[CALL] extract_speech_boundaries' trace! Captured output: {repr(out)}"
+    assert "[CALL] extract_speech_boundaries" not in out, f"Noisy '[CALL] extract_speech_boundaries' trace was not commented out!"
 
 
 def test_dryrun_core_metrics_calculate_mae_rmse():
@@ -192,20 +192,20 @@ def test_dryrun_core_metrics_calculate_mae_rmse():
     res, out = run_and_capture(core.metrics.calculate_mae_rmse, pred, gt)
     mae, rmse = res
     assert np.isclose(mae, 30.0)
-    assert "[CALL] calculate_mae_rmse" in out, f"Missing '[CALL] calculate_mae_rmse' trace! Captured output: {repr(out)}"
+    assert "[CALL] calculate_mae_rmse" not in out, f"Noisy '[CALL] calculate_mae_rmse' trace was not commented out!"
 
 
 def test_dryrun_core_metrics_evaluate_file_performance():
     res, out = run_and_capture(core.metrics.evaluate_file_performance, "test_file", (1.0, 2.0), (1.02, 2.04))
     assert res["file_id"] == "test_file"
-    assert "[CALL] evaluate_file_performance" in out, f"Missing '[CALL] evaluate_file_performance' trace! Captured output: {repr(out)}"
+    assert "[CALL] evaluate_file_performance" not in out, f"Noisy '[CALL] evaluate_file_performance' trace was not commented out!"
 
 
 def test_dryrun_core_metrics_summarize_benchmark():
     res_list = [{"mae_ms": 10.0, "rmse_ms": 15.0}, {"mae_ms": 20.0, "rmse_ms": 25.0}]
     res, out = run_and_capture(core.metrics.summarize_benchmark, res_list)
     assert res["avg_mae_ms"] == 15.0
-    assert "[CALL] summarize_benchmark" in out, f"Missing '[CALL] summarize_benchmark' trace! Captured output: {repr(out)}"
+    assert "[CALL] summarize_benchmark" not in out, f"Noisy '[CALL] summarize_benchmark' trace was not commented out!"
 
 
 def test_dryrun_algo_tt1_hodgkinson_cost_function():
@@ -216,14 +216,14 @@ def test_dryrun_algo_tt1_hodgkinson_cost_function():
     }]
     res, out = run_and_capture(algorithms.tt1_hodgkinson.hodgkinson_cost_function, 0.02, mock_train)
     assert isinstance(res, float)
-    assert "[CALL] hodgkinson_cost_function" in out, f"Missing '[CALL] hodgkinson_cost_function' trace! Captured output: {repr(out)}"
+    assert "[CALL] hodgkinson_cost_function" not in out, f"Noisy '[CALL] hodgkinson_cost_function' trace was not commented out!"
 
 
 def test_dryrun_algo_tt1_train_optimal_threshold_tt1():
     res, out = run_and_capture(algorithms.tt1_hodgkinson.train_optimal_threshold_tt1, "TinHieuHuanLuyen", (0.002, 0.003), 5)
     assert isinstance(res, float)
     assert 0.001 <= res <= 0.005
-    assert "[CALL] train_optimal_threshold_tt1" in out, f"Missing '[CALL] train_optimal_threshold_tt1' trace! Captured output: {repr(out)}"
+    assert "[CALL] train_optimal_threshold_tt1" not in out, f"Noisy '[CALL] train_optimal_threshold_tt1' trace was not commented out!"
 
 
 def test_dryrun_algo_tt1_predict_vad_tt1():
@@ -232,7 +232,7 @@ def test_dryrun_algo_tt1_predict_vad_tt1():
     res, out = run_and_capture(algorithms.tt1_hodgkinson.predict_vad_tt1, sig, 16000, 0.0025)
     t_s, t_e, ste, times = res
     assert t_s <= t_e
-    assert "[CALL] predict_vad_tt1" in out, f"Missing '[CALL] predict_vad_tt1' trace! Captured output: {repr(out)}"
+    assert "[CALL] predict_vad_tt1" not in out, f"Noisy '[CALL] predict_vad_tt1' trace was not commented out!"
 
 
 def test_dryrun_algo_tt2_compute_histogram_100bins():
@@ -241,14 +241,14 @@ def test_dryrun_algo_tt2_compute_histogram_100bins():
     counts, centers = res
     assert len(counts) == 100
     assert len(centers) == 100
-    assert "[CALL] compute_histogram_100bins" in out, f"Missing '[CALL] compute_histogram_100bins' trace! Captured output: {repr(out)}"
+    assert "[CALL] compute_histogram_100bins" not in out, f"Noisy '[CALL] compute_histogram_100bins' trace was not commented out!"
 
 
 def test_dryrun_algo_tt2_moving_average_smooth():
     hist = np.ones(100, dtype=np.float64)
     res, out = run_and_capture(algorithms.tt2_histogram.moving_average_smooth, hist, 5)
     assert len(res) == 100
-    assert "[CALL] moving_average_smooth" in out, f"Missing '[CALL] moving_average_smooth' trace! Captured output: {repr(out)}"
+    assert "[CALL] moving_average_smooth" not in out, f"Noisy '[CALL] moving_average_smooth' trace was not commented out!"
 
 
 def test_dryrun_algo_tt2_find_histogram_peaks():
@@ -259,7 +259,7 @@ def test_dryrun_algo_tt2_find_histogram_peaks():
     res, out = run_and_capture(algorithms.tt2_histogram.find_histogram_peaks, smoothed, centers)
     m1, m2 = res
     assert m1 < m2
-    assert "[CALL] find_histogram_peaks" in out, f"Missing '[CALL] find_histogram_peaks' trace! Captured output: {repr(out)}"
+    assert "[CALL] find_histogram_peaks" not in out, f"Noisy '[CALL] find_histogram_peaks' trace was not commented out!"
 
 
 def test_dryrun_algo_tt2_compute_adaptive_threshold_tt2():
@@ -267,7 +267,7 @@ def test_dryrun_algo_tt2_compute_adaptive_threshold_tt2():
     res, out = run_and_capture(algorithms.tt2_histogram.compute_adaptive_threshold_tt2, ste, 5.0)
     assert isinstance(res, float)
     assert 0.0 < res < 1.0
-    assert "[CALL] compute_adaptive_threshold_tt2" in out, f"Missing '[CALL] compute_adaptive_threshold_tt2' trace! Captured output: {repr(out)}"
+    assert "[CALL] compute_adaptive_threshold_tt2" not in out, f"Noisy '[CALL] compute_adaptive_threshold_tt2' trace was not commented out!"
 
 
 def test_dryrun_algo_tt2_predict_vad_tt2():
@@ -276,14 +276,14 @@ def test_dryrun_algo_tt2_predict_vad_tt2():
     res, out = run_and_capture(algorithms.tt2_histogram.predict_vad_tt2, sig, 16000, 5.0)
     t_s, t_e, ste, times, t_adapt = res
     assert t_s <= t_e
-    assert "[CALL] predict_vad_tt2" in out, f"Missing '[CALL] predict_vad_tt2' trace! Captured output: {repr(out)}"
+    assert "[CALL] predict_vad_tt2" not in out, f"Noisy '[CALL] predict_vad_tt2' trace was not commented out!"
 
 
 def test_dryrun_algo_tt3_extract_speech_silence_ste_frames():
     res, out = run_and_capture(algorithms.tt3_gaussian.extract_speech_silence_ste_frames, "TinHieuHuanLuyen")
     sil_ste, sp_ste = res
     assert len(sil_ste) > 0 and len(sp_ste) > 0
-    assert "[CALL] extract_speech_silence_ste_frames" in out, f"Missing '[CALL] extract_speech_silence_ste_frames' trace! Captured output: {repr(out)}"
+    assert "[CALL] extract_speech_silence_ste_frames" not in out, f"Noisy '[CALL] extract_speech_silence_ste_frames' trace was not commented out!"
 
 
 def test_dryrun_algo_tt3_estimate_gaussian_parameters():
@@ -292,13 +292,13 @@ def test_dryrun_algo_tt3_estimate_gaussian_parameters():
     res, out = run_and_capture(algorithms.tt3_gaussian.estimate_gaussian_parameters, sil, sp)
     mu_sil, s_sil, mu_sp, s_sp = res
     assert mu_sil < mu_sp
-    assert "[CALL] estimate_gaussian_parameters" in out, f"Missing '[CALL] estimate_gaussian_parameters' trace! Captured output: {repr(out)}"
+    assert "[CALL] estimate_gaussian_parameters" not in out, f"Noisy '[CALL] estimate_gaussian_parameters' trace was not commented out!"
 
 
 def test_dryrun_algo_tt3_solve_bayes_decision_threshold():
     res, out = run_and_capture(algorithms.tt3_gaussian.solve_bayes_decision_threshold, 0.000359, 0.000715, 0.196747, 0.233472)
     assert 0.001 < res < 0.01
-    assert "[CALL] solve_bayes_decision_threshold" in out, f"Missing '[CALL] solve_bayes_decision_threshold' trace! Captured output: {repr(out)}"
+    assert "[CALL] solve_bayes_decision_threshold" not in out, f"Noisy '[CALL] solve_bayes_decision_threshold' trace was not commented out!"
 
 
 def test_dryrun_algo_tt3_predict_vad_tt3():
@@ -307,14 +307,14 @@ def test_dryrun_algo_tt3_predict_vad_tt3():
     res, out = run_and_capture(algorithms.tt3_gaussian.predict_vad_tt3, sig, 16000, 0.002864)
     t_s, t_e, ste, times = res
     assert t_s <= t_e
-    assert "[CALL] predict_vad_tt3" in out, f"Missing '[CALL] predict_vad_tt3' trace! Captured output: {repr(out)}"
+    assert "[CALL] predict_vad_tt3" not in out, f"Noisy '[CALL] predict_vad_tt3' trace was not commented out!"
 
 
 def test_dryrun_main_setup_screen_window():
     fig = plt.figure()
     _, out = run_and_capture(main.setup_screen_window, fig, "top_left")
     plt.close(fig)
-    assert "[CALL] setup_screen_window" in out, f"Missing '[CALL] setup_screen_window' trace! Captured output: {repr(out)}"
+    assert "[CALL] setup_screen_window" not in out, f"Noisy '[CALL] setup_screen_window' trace was not commented out!"
 
 
 def test_dryrun_main_plot_vad_result():
@@ -327,19 +327,19 @@ def test_dryrun_main_plot_vad_result():
         ax, sig, 16000, times, ste, (0.005, 0.015), (0.005, 0.015), "Test Title"
     )
     plt.close(fig)
-    assert "[CALL] plot_vad_result" in out, f"Missing '[CALL] plot_vad_result' trace! Captured output: {repr(out)}"
+    assert "[CALL] plot_vad_result" not in out, f"Noisy '[CALL] plot_vad_result' trace was not commented out!"
 
 
 def test_dryrun_main_run_pipeline():
     res, out = run_and_capture(main.run_pipeline, "TinHieuKiemThu", "tt3", False, None)
     assert len(res) == 4
-    assert "[CALL] run_pipeline" in out, f"Missing '[CALL] run_pipeline' trace! Captured output: {repr(out)}"
+    assert "[CALL] run_pipeline" not in out, f"Noisy '[CALL] run_pipeline' trace was not commented out!"
 
 
 def test_dryrun_main_entrypoint(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["main.py", "--no-plot", "--algo", "tt3"])
     _, out = run_and_capture(main.main)
-    assert "[CALL] main" in out, f"Missing '[CALL] main' trace! Captured output: {repr(out)}"
+    assert "[CALL] main" not in out, f"Noisy '[CALL] main' trace was not commented out!"
 
 
 # ---------------------------------------------------------------------------
@@ -392,14 +392,12 @@ if __name__ == "__main__":
         try:
             _, out = run_and_capture(fn, *args, **kwargs)
             has_trace = expected_trace in out
-            actual_line = [line for line in out.splitlines() if name in line]
-            actual_str = actual_line[0] if actual_line else (out.splitlines()[0] if out.splitlines() else "<EMPTY>")
-            if has_trace:
-                passes.append((name, actual_str))
-                print(f"[PASS] {name:<35} -> output: {actual_str}")
+            if not has_trace:
+                passes.append(name)
+                print(f"[PASS] {name:<35} -> cleanly executed without noisy trace")
             else:
-                failures.append((name, expected_trace, actual_str))
-                print(f"[FAIL] {name:<35} -> expected: {expected_trace!r}, actual: {actual_str!r}")
+                failures.append((name, expected_trace, out))
+                print(f"[FAIL] {name:<35} -> noisy trace present: {expected_trace!r}")
         except Exception as e:
             failures.append((name, expected_trace, f"CRASH: {e}"))
             print(f"[CRASH] {name:<35} -> Exception: {e}")

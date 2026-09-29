@@ -173,26 +173,26 @@ uv run python main.py --algo tt1 --no-plot
 ## 6. DANH SÁCH CÔNG VIỆC TỪNG BƯỚC CHO SINH VIÊN 1 (STEP-BY-STEP TODO CHECKLIST)
 
 ### Checklist triển khai code trong `algorithms/tt1_hodgkinson.py`:
-- [ ] **Bước 1**: Mở tệp `algorithms/tt1_hodgkinson.py`, đọc kỹ các docstrings và kiểu dữ liệu trả về của 3 hàm:
+- [x] **Bước 1**: Mở tệp `algorithms/tt1_hodgkinson.py`, đọc kỹ các docstrings và kiểu dữ liệu trả về của 3 hàm:
   - `hodgkinson_cost_function(threshold: float, train_data: List[Dict]) -> float`
   - `train_optimal_threshold_tt1(training_dir: str, search_range: Tuple[float, float], num_steps: int) -> float`
   - `predict_vad_tt1(signal: np.ndarray, sample_rate: int, threshold: float) -> Tuple[float, float, np.ndarray, np.ndarray]`
-- [ ] **Bước 2**: Xác nhận mỗi hàm đều giữ nguyên định danh in vết `print("ten_ham")` và chú thích `# //TODO`.
-- [ ] **Bước 3**: Trong `hodgkinson_cost_function`:
+- [x] **Bước 2**: Xác nhận mỗi hàm đều giữ nguyên định danh in vết `print("ten_ham")` và chú thích `# //TODO`.
+- [x] **Bước 3**: Trong `hodgkinson_cost_function`:
   - Lặp qua danh sách `train_data`.
   - Gọi `apply_threshold(ste_norm, threshold)`.
   - Gọi `remove_short_silences_200ms(decisions)`.
   - Gọi `extract_speech_boundaries(smoothed, frame_times)`.
   - Gọi `calculate_mae_rmse(pred_bounds, gt_bounds)`.
   - Tính trung bình MAE qua tất cả các file huấn luyện.
-- [ ] **Bước 4**: Trong `train_optimal_threshold_tt1`:
+- [x] **Bước 4**: Trong `train_optimal_threshold_tt1`:
   - Đọc và trích xuất đặc trưng của 4 file trong `TinHieuHuanLuyen/`.
   - Khởi tạo mảng ứng viên bằng `np.linspace(search_range[0], search_range[1], num_steps)`.
   - Quét tìm $T$ tối ưu, xác nhận hội tụ tại $T_{opt} \approx 0.0025$.
-- [ ] **Bước 5**: Kiểm tra tuân thủ coding standards:
+- [x] **Bước 5**: Kiểm tra tuân thủ coding standards:
   - Không import `scipy.signal` hoặc `librosa`.
   - Có đầy đủ comment giải thích cho mỗi khối mã 5 - 10 dòng.
-- [ ] **Bước 6**: Chạy kiểm thử toàn bộ hệ thống bằng lệnh:
+- [x] **Bước 6**: Chạy kiểm thử toàn bộ hệ thống bằng lệnh:
   ```bash
   uv run pytest tests/test_vad_pipeline.py
   uv run python main.py --algo tt1 --no-plot

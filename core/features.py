@@ -28,8 +28,8 @@ def frame_signal(
             - frames (np.ndarray): 2D array of shape (num_frames, frame_len_samples).
             - frame_times (np.ndarray): 1D array of center timestamps in seconds for each frame.
     """
-    # //TODO: Implement signal framing with 20ms frame length and 10ms hop size using basic indexing
-    print("[CALL] frame_signal")
+    # [DONE]: Implement signal framing with 20ms frame length and 10ms hop size using basic indexing
+    # print("[CALL] frame_signal")
 
     # Tính độ dài khung N và bước nhảy H theo số mẫu
     frame_len = int(round(frame_size_ms * sample_rate / 1000.0))
@@ -71,8 +71,8 @@ def compute_ste(frames: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: 1D array of energy values for each frame.
     """
-    # //TODO: Calculate Short-Time Energy (STE) as the sum of squared samples per frame
-    print("[CALL] compute_ste")
+    # [DONE]: Calculate Short-Time Energy (STE) as the sum of squared samples per frame
+    # print("[CALL] compute_ste")
 
     # Bình phương từng mẫu trong mỗi khung
     squared_frames = np.square(frames)
@@ -94,8 +94,8 @@ def normalize_ste(ste: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: 1D array of normalized energy values in [0.0, 1.0].
     """
-    # //TODO: Normalize STE by dividing by its maximum value across all frames
-    print("[CALL] normalize_ste")
+    # [DONE]: Normalize STE by dividing by its maximum value across all frames
+    # print("[CALL] normalize_ste")
 
     max_energy = np.max(ste)
 
@@ -127,8 +127,8 @@ def extract_ste_features(
             - ste_norm (np.ndarray): Normalized Short-Time Energy.
             - frame_times (np.ndarray): Center timestamp of each frame in seconds.
     """
-    # //TODO: Execute framing, calculate STE, and normalize energy in a single unified pipeline
-    print("[CALL] extract_ste_features")
+    # [DONE]: Execute framing, calculate STE, and normalize energy in a single unified pipeline
+    # print("[CALL] extract_ste_features")
 
     # Bước 1: Chia khung tín hiệu
     frames, frame_times = frame_signal(

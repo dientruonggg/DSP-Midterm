@@ -22,8 +22,8 @@ def read_wav(file_path: str) -> Tuple[np.ndarray, int]:
             - signal (np.ndarray): 1D float64 array of samples normalized to [-1.0, 1.0].
             - sample_rate (int): Sampling frequency (e.g., 16000 or 44100 Hz).
     """
-    # //TODO: Implement WAV file reading using standard wave library, parse byte stream to float array
-    print("[CALL] read_wav")
+    # [DONE]: Implement WAV file reading using standard wave library, parse byte stream to float array
+    # print("[CALL] read_wav")
 
     # Mở file WAV bằng thư viện wave chuẩn của Python
     with wave.open(file_path, "rb") as wf:
@@ -63,8 +63,8 @@ def read_lab(lab_path: str) -> List[Tuple[float, float, str]]:
         List[Tuple[float, float, str]]:
             List of parsed segments, each containing (t_start, t_end, label).
     """
-    # //TODO: Parse lines of Praat .lab file into (t_start, t_end, label), filtering out F0 lines
-    print("[CALL] read_lab")
+    # [DONE]: Parse lines of Praat .lab file into (t_start, t_end, label), filtering out F0 lines
+    # print("[CALL] read_lab")
 
     segments: List[Tuple[float, float, str]] = []
 
@@ -102,8 +102,8 @@ def get_speech_groundtruth(lab_segments: List[Tuple[float, float, str]]) -> Tupl
     Returns:
         Tuple[float, float]: (T_start, T_end) ground-truth speech boundaries in seconds.
     """
-    # //TODO: Locate earliest speech start time and latest speech end time across all 'v'/'uv' segments
-    print("[CALL] get_speech_groundtruth")
+    # [DONE]: Locate earliest speech start time and latest speech end time across all 'v'/'uv' segments
+    # print("[CALL] get_speech_groundtruth")
 
     speech_segments = [seg for seg in lab_segments if seg[2] in ("v", "uv")]
 

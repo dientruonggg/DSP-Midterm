@@ -34,8 +34,8 @@ def extract_speech_silence_ste_frames(
             - silence_ste (np.ndarray): 1D array of STE_norm values for silence frames.
             - speech_ste (np.ndarray): 1D array of STE_norm values for speech frames.
     """
-    # //TODO: Partition training frames into silence vs speech collections based on ground truth
-    print("[CALL] extract_speech_silence_ste_frames")
+    # [DONE]: Partition training frames into silence vs speech collections based on ground truth
+    # print("[CALL] extract_speech_silence_ste_frames")
 
     wav_files = sorted(glob.glob(os.path.join(training_dir, "*.wav")))
     silence_list: List[float] = []
@@ -73,8 +73,8 @@ def estimate_gaussian_parameters(
     Returns:
         Tuple[float, float, float, float]: (mu_sil, sigma_sil, mu_sp, sigma_sp)
     """
-    # //TODO: Compute mean and std for silence and speech distributions using basic numpy functions
-    print("[CALL] estimate_gaussian_parameters")
+    # [DONE]: Compute mean and std for silence and speech distributions using basic numpy functions
+    # print("[CALL] estimate_gaussian_parameters")
 
     # Tính kỳ vọng (mean) và độ lệch chuẩn (std) của khoảng lặng
     mu_sil = float(np.mean(silence_ste))
@@ -105,8 +105,8 @@ def solve_bayes_decision_threshold(
     Returns:
         float: Optimal Bayes threshold T_Bayes (approximately 0.002864).
     """
-    # //TODO: Solve quadratic equation for Bayes decision boundary where Gaussian PDFs intersect
-    print("[CALL] solve_bayes_decision_threshold")
+    # [DONE]: Solve quadratic equation for Bayes decision boundary where Gaussian PDFs intersect
+    # print("[CALL] solve_bayes_decision_threshold")
 
     var_sil = sigma_sil ** 2
     var_sp = sigma_sp ** 2
@@ -164,8 +164,8 @@ def predict_vad_tt3(
             - ste_norm (np.ndarray): Normalized STE curve.
             - frame_times (np.ndarray): Frame timestamps in seconds.
     """
-    # //TODO: Run full VAD pipeline with Gaussian Bayes threshold, return boundaries and STE curve
-    print("[CALL] predict_vad_tt3")
+    # [DONE]: Run full VAD pipeline with Gaussian Bayes threshold, return boundaries and STE curve
+    # print("[CALL] predict_vad_tt3")
 
     # Bước 1: Trích xuất đặc trưng STE chuẩn hóa
     ste_norm, frame_times = extract_ste_features(signal, sample_rate)

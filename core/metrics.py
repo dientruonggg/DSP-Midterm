@@ -26,8 +26,8 @@ def calculate_mae_rmse(
     Returns:
         Tuple[float, float]: (mae_ms, rmse_ms) in milliseconds.
     """
-    # //TODO: Compute MAE and RMSE in milliseconds between predicted and ground-truth boundaries
-    print("[CALL] calculate_mae_rmse")
+    # [DONE]: Compute MAE and RMSE in milliseconds between predicted and ground-truth boundaries
+    # print("[CALL] calculate_mae_rmse")
 
     pred_start, pred_end = pred_boundaries
     gt_start, gt_end = gt_boundaries
@@ -62,8 +62,8 @@ def evaluate_file_performance(
     Returns:
         Dict[str, Any]: Dictionary containing file_id, deltas, MAE, RMSE.
     """
-    # //TODO: Calculate deltas, MAE, and RMSE and format into structured result dictionary
-    print("[CALL] evaluate_file_performance")
+    # [DONE]: Calculate deltas, MAE, and RMSE and format into structured result dictionary
+    # print("[CALL] evaluate_file_performance")
 
     pred_s, pred_e = pred_bounds
     gt_s, gt_e = gt_bounds
@@ -97,8 +97,8 @@ def summarize_benchmark(
     Returns:
         Dict[str, float]: Aggregate summary containing avg_mae_ms and avg_rmse_ms.
     """
-    # //TODO: Aggregate per-file errors to compute overall benchmark MAE and RMSE
-    print("[CALL] summarize_benchmark")
+    # [DONE]: Aggregate per-file errors to compute overall benchmark MAE and RMSE
+    # print("[CALL] summarize_benchmark")
 
     if not results_list:
         return {"avg_mae_ms": 0.0, "avg_rmse_ms": 0.0}

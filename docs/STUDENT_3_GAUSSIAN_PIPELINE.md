@@ -217,25 +217,25 @@ uv run python main.py --algo tt3 --no-plot
 ## 5. DANH SÁCH CÔNG VIỆC TỪNG BƯỚC CHO SINH VIÊN 3 & TRƯỞNG NHÓM (STEP-BY-STEP TODO CHECKLIST)
 
 ### Checklist 1: Trách nhiệm Pipeline Manager (`core/` và `main.py`)
-- [ ] **Bước 1**: Rà soát các hàm trong `core/io_utils.py`, `core/features.py`, `core/postprocess.py`, `core/metrics.py`. Đảm bảo các hàm đều có docstring rõ ràng, type annotation và vết in định danh `print("ten_ham")`.
-- [ ] **Bước 2**: Trong `main.py`:
+- [x] **Bước 1**: Rà soát các hàm trong `core/io_utils.py`, `core/features.py`, `core/postprocess.py`, `core/metrics.py`. Đảm bảo các hàm đều có docstring rõ ràng, type annotation và vết in định danh `print("ten_ham")`.
+- [x] **Bước 2**: Trong `main.py`:
   - Hoàn thiện `setup_screen_window` phân bổ chính xác 4 cửa sổ vào 4 góc màn hình theo tọa độ định trước.
   - Hoàn thiện `plot_vad_result` vẽ dạng sóng xám, đường $STE_{norm}$ cam, vạch chuẩn đỏ, vạch dự đoán xanh.
   - Hoàn thiện `run_pipeline` duyệt qua 4 file kiểm thử, xuất bảng đối sánh định lượng và hiển thị đồ thị.
-- [ ] **Bước 3**: Kiểm tra tuân thủ coding standards:
+- [x] **Bước 3**: Kiểm tra tuân thủ coding standards:
   - CẤM TUYỆT ĐỐI `scipy.signal` hoặc `librosa`.
   - Có chú thích giải thích cho từng đoạn mã 5 - 10 dòng.
 
 ### Checklist 2: Cài đặt Thuật toán TT3 trong `algorithms/tt3_gaussian.py`
-- [ ] **Bước 4**: Hoàn thiện `extract_speech_silence_ste_frames(training_dir: str)`:
+- [x] **Bước 4**: Hoàn thiện `extract_speech_silence_ste_frames(training_dir: str)`:
   - Đọc 4 tệp huấn luyện, tách các khung thành 2 mảng `silence_ste` (499 khung) và `speech_ste` (795 khung) dựa vào nhãn Ground-Truth.
-- [ ] **Bước 5**: Hoàn thiện `estimate_gaussian_parameters(silence_ste, speech_ste)`:
+- [x] **Bước 5**: Hoàn thiện `estimate_gaussian_parameters(silence_ste, speech_ste)`:
   - Dùng `np.mean` và `np.std` tính $(\mu_{sil}, \sigma_{sil})$ và $(\mu_{sp}, \sigma_{sp})$.
-- [ ] **Bước 6**: Hoàn thiện `solve_bayes_decision_threshold(mu_sil, sigma_sil, mu_sp, sigma_sp)`:
+- [x] **Bước 6**: Hoàn thiện `solve_bayes_decision_threshold(mu_sil, sigma_sil, mu_sp, sigma_sp)`:
   - Thiết lập các hệ số $A, B, C$, giải biệt thức $\Delta$, trả về nghiệm $T_{Bayes} \approx 0.002864$.
-- [ ] **Bước 7**: Hoàn thiện `predict_vad_tt3(signal, sample_rate, threshold=0.002864)`:
+- [x] **Bước 7**: Hoàn thiện `predict_vad_tt3(signal, sample_rate, threshold=0.002864)`:
   - Chạy quy trình phân đoạn VAD, trả về `(t_start, t_end, ste_norm, frame_times)`.
-- [ ] **Bước 8**: Chạy toàn bộ bộ test kiểm thử tích hợp:
+- [x] **Bước 8**: Chạy toàn bộ bộ test kiểm thử tích hợp:
   ```bash
   uv run pytest tests/test_vad_pipeline.py
   uv run python main.py --algo tt3 --no-plot

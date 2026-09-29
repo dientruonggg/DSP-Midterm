@@ -19,8 +19,8 @@ def apply_threshold(ste_norm: np.ndarray, threshold: float) -> np.ndarray:
     Returns:
         np.ndarray: Binary array (1 for speech, 0 for silence).
     """
-    # //TODO: Classify frames into binary states: 1 if ste_norm >= threshold else 0
-    print("[CALL] apply_threshold")
+    # [DONE]: Classify frames into binary states: 1 if ste_norm >= threshold else 0
+    # print("[CALL] apply_threshold")
 
     # So sánh từng giá trị năng lượng với ngưỡng quy định
     decisions = (ste_norm >= threshold).astype(np.int32)
@@ -46,8 +46,8 @@ def remove_short_silences_200ms(
     Returns:
         np.ndarray: Smoothed binary array with short silences bridged.
     """
-    # //TODO: Scan for runs of 0s bounded by 1s; if length < min_silence_frames (20), convert to 1s
-    print("[CALL] remove_short_silences_200ms")
+    # [DONE]: Scan for runs of 0s bounded by 1s; if length < min_silence_frames (20), convert to 1s
+    # print("[CALL] remove_short_silences_200ms")
 
     min_frames = int(round(min_silence_ms / hop_size_ms))
     smoothed = frame_decisions.copy()
@@ -99,8 +99,8 @@ def extract_speech_boundaries(
     Returns:
         Tuple[float, float]: (T_start, T_end) in seconds.
     """
-    # //TODO: Locate index of first speech frame (T_start) and last speech frame (T_end)
-    print("[CALL] extract_speech_boundaries")
+    # [DONE]: Locate index of first speech frame (T_start) and last speech frame (T_end)
+    # print("[CALL] extract_speech_boundaries")
 
     speech_indices = np.where(frame_decisions == 1)[0]
 

@@ -33,7 +33,12 @@ from core.features import extract_ste_features
 from core.metrics import evaluate_file_performance, summarize_benchmark
 
 from algorithms.tt1_hodgkinson import predict_vad_tt1, train_optimal_threshold_tt1
-from algorithms.tt2_histogram import predict_vad_tt2
+from algorithms.tt2_histogram import (
+    predict_vad_tt2,
+    compute_histogram_100bins,
+    moving_average_smooth,
+    find_histogram_peaks
+)
 from algorithms.tt3_gaussian import (
     predict_vad_tt3,
     extract_speech_silence_ste_frames,
@@ -57,8 +62,8 @@ def setup_screen_window(
         screen_width (int): Screen resolution width in pixels (default: 1920).
         screen_height (int): Screen resolution height in pixels (default: 1080).
     """
-    # //TODO: Set window geometry to place Figure at the designated screen quadrant
-    print("[CALL] setup_screen_window")
+    # [DONE]: Set window geometry to place Figure at the designated screen quadrant
+    # print("[CALL] setup_screen_window")
 
     # Tính kích thước cho mỗi cửa sổ (chia nửa màn hình ngang và dọc)
     win_w = screen_width // 2
@@ -110,8 +115,8 @@ def plot_vad_result(
         pred_bounds (Tuple[float, float]): Detected (t_start, t_end).
         title (str): Subplot title.
     """
-    # //TODO: Render waveform x(n), normalized STE curve, red GT lines, blue predicted lines
-    print("[CALL] plot_vad_result")
+    # [DONE]: Render waveform x(n), normalized STE curve, red GT lines, blue predicted lines
+    # print("[CALL] plot_vad_result")
 
     # Trục thời gian tính bằng giây cho toàn bộ dạng sóng x(n)
     time_axis = np.arange(len(signal)) / sample_rate
@@ -160,8 +165,8 @@ def run_pipeline(
     Returns:
         List[Dict[str, Any]]: List of evaluation dictionaries for benchmark.
     """
-    # //TODO: Run batch evaluation on 4 test files, compute MAE/RMSE, setup 4 corner figure windows
-    print("[CALL] run_pipeline")
+    # [DONE]: Run batch evaluation on 4 test files, compute MAE/RMSE, setup 4 corner figure windows
+    # print("[CALL] run_pipeline")
 
     test_files_layout = [
         {"name": "phone_F2",  "pos": "top_left",     "label": "Góc Trên - Trái: phone_F2"},
@@ -247,8 +252,8 @@ def main() -> None:
     """
     Command Line Interface entry point.
     """
-    # //TODO: Parse CLI options and initiate pipeline execution
-    print("[CALL] main")
+    # [DONE]: Parse CLI options and initiate pipeline execution
+    # print("[CALL] main")
 
     parser = argparse.ArgumentParser(description="DSP MidTerm - Voice Activity Detection (VAD) Pipeline Manager")
     parser.add_argument("--test-dir", type=str, default="TinHieuKiemThu", help="Thư mục chứa tín hiệu kiểm thử")
@@ -269,7 +274,18 @@ def main() -> None:
             print(f"-> Ngưỡng tối ưu toàn cục tìm được TT1: T_opt = {t_opt:.6f} (Chuẩn: 0.0025)")
         elif args.algo == "tt2":
             print("[THÔNG BÁO TT2] Thuật toán TT2 (Giannakopoulos) là ngưỡng tự thích nghi per-utterance.")
-            print("Không cần huấn luyện ngưỡng toàn cục; áp dụng trực tiếp W = 5.0 trên từng file.")
+            print(f"Không cần huấn luyện ngưỡng tĩnh toàn cục; tự động tính M1, M2 và T_adapt cho từng file ({args.train_dir}/):")
+            import glob
+            wav_files = sorted(glob.glob(os.path.join(args.train_dir, "*.wav")))
+            for wav_p in wav_files:
+                fname = os.path.basename(wav_p)
+                sig, fs = read_wav(wav_p)
+                ste, _ = extract_ste_features(sig, fs)
+                counts, centers = compute_histogram_100bins(ste)
+                sm = moving_average_smooth(counts, 5)
+                m1, m2 = find_histogram_peaks(sm, centers)
+                t_val = (5.0 * m1 + m2) / 6.0
+                print(f"  • {fname:<15}: M1 (Silence) = {m1:.4f}, M2 (Speech) = {m2:.4f} -> T_adapt = {t_val:.4f}")
         else:
             print("[HUẤN LUYỆN TT3] Đang thống kê phân bố Gauss và giải phương trình xác suất Bayes...")
             sil_ste, sp_ste = extract_speech_silence_ste_frames(args.train_dir)

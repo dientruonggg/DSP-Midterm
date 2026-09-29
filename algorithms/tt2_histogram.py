@@ -31,8 +31,8 @@ def compute_histogram_100bins(
             - counts (np.ndarray): Frequency count for each bin.
             - bin_centers (np.ndarray): Center value of each bin in [0, 1].
     """
-    # //TODO: Construct 100-bin histogram for STE_norm values in range [0, 1] using basic array math
-    print("[CALL] compute_histogram_100bins")
+    # [DONE]: Construct 100-bin histogram for STE_norm values in range [0, 1] using basic array math
+    # print("[CALL] compute_histogram_100bins")
 
     # Tạo 101 mốc biên chia đều đoạn [0.0, 1.0] thành 100 bins
     bin_edges = np.linspace(0.0, 1.0, num_bins + 1)
@@ -67,8 +67,8 @@ def moving_average_smooth(
     Returns:
         np.ndarray: Smoothed histogram array of same length.
     """
-    # //TODO: Smooth 1D array using basic moving average window of size 5 with edge padding
-    print("[CALL] moving_average_smooth")
+    # [DONE]: Smooth 1D array using basic moving average window of size 5 with edge padding
+    # print("[CALL] moving_average_smooth")
 
     n = len(histogram)
     smoothed = np.zeros(n, dtype=np.float64)
@@ -100,8 +100,8 @@ def find_histogram_peaks(
     Returns:
         Tuple[float, float]: (M1, M2) corresponding to the energy levels of silence and speech peaks.
     """
-    # //TODO: Find first local peak M1 (silence) and second significant local peak M2 (speech)
-    print("[CALL] find_histogram_peaks")
+    # [DONE]: Find first local peak M1 (silence) and second significant local peak M2 (speech)
+    # print("[CALL] find_histogram_peaks")
 
     n = len(smoothed_hist)
     peaks = []
@@ -153,8 +153,8 @@ def compute_adaptive_threshold_tt2(
     Returns:
         float: Computed adaptive threshold T.
     """
-    # //TODO: Extract histogram, smooth with MA filter, find M1 & M2, compute T = (W*M1 + M2)/(W+1)
-    print("[CALL] compute_adaptive_threshold_tt2")
+    # [DONE]: Extract histogram, smooth with MA filter, find M1 & M2, compute T = (W*M1 + M2)/(W+1)
+    # print("[CALL] compute_adaptive_threshold_tt2")
 
     # Bước 1: Tính histogram 100 bins
     counts, bin_centers = compute_histogram_100bins(ste_norm, num_bins=100)
@@ -192,8 +192,8 @@ def predict_vad_tt2(
             - frame_times (np.ndarray): Center timestamp of each frame (s).
             - computed_threshold (float): Adaptive threshold T computed for this file.
     """
-    # //TODO: Run end-to-end adaptive histogram VAD, return boundaries, features, and threshold
-    print("[CALL] predict_vad_tt2")
+    # [DONE]: Run end-to-end adaptive histogram VAD, return boundaries, features, and threshold
+    # print("[CALL] predict_vad_tt2")
 
     # Trích xuất STE chuẩn hóa
     ste_norm, frame_times = extract_ste_features(signal, sample_rate)

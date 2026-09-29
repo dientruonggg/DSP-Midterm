@@ -179,26 +179,26 @@ Sinh viên 2 cần nắm vững 3 luận điểm khoa học sau để trả lờ
 ## 5. DANH SÁCH CÔNG VIỆC TỪNG BƯỚC CHO SINH VIÊN 2 (STEP-BY-STEP TODO CHECKLIST)
 
 ### Checklist triển khai code trong `algorithms/tt2_histogram.py`:
-- [ ] **Bước 1**: Mở tệp `algorithms/tt2_histogram.py`, rà soát các hàm thành phần và kiểu dữ liệu:
+- [x] **Bước 1**: Mở tệp `algorithms/tt2_histogram.py`, rà soát các hàm thành phần và kiểu dữ liệu:
   - `compute_histogram_100bins(ste_norm: np.ndarray, num_bins: int) -> Tuple[np.ndarray, np.ndarray]`
   - `moving_average_smooth(histogram: np.ndarray, window_size: int) -> np.ndarray`
   - `find_histogram_peaks(smoothed_hist: np.ndarray, bin_centers: np.ndarray) -> Tuple[float, float]`
   - `compute_adaptive_threshold_tt2(ste_norm: np.ndarray, weight_w: float) -> float`
   - `predict_vad_tt2(signal: np.ndarray, sample_rate: int, weight_w: float) -> Tuple[float, float, np.ndarray, np.ndarray, float]`
-- [ ] **Bước 2**: Giữ nguyên toàn bộ vết in định danh hàm: `print("ten_ham")` và chú thích `# //TODO`.
-- [ ] **Bước 3**: Trong `compute_histogram_100bins`:
+- [x] **Bước 2**: Giữ nguyên toàn bộ vết in định danh hàm: `print("ten_ham")` và chú thích `# //TODO`.
+- [x] **Bước 3**: Trong `compute_histogram_100bins`:
   - Khởi tạo 101 mốc biên bằng `np.linspace(0.0, 1.0, 101)`.
   - Phân loại bằng `np.digitize(ste_norm, bin_edges) - 1`.
   - Cắt clip chỉ số trong $[0, 99]$ để đưa mẫu $1.0$ vào bin 99.
   - Tính tâm bin và trả về `(counts, bin_centers)`.
-- [ ] **Bước 4**: Trong `moving_average_smooth`:
+- [x] **Bước 4**: Trong `moving_average_smooth`:
   - Dùng vòng lặp cơ bản tính trung bình trượt trên cửa sổ $[-2, +2]$.
   - Kiểm tra nghiêm ngặt: Tuyệt đối không import `scipy.signal`.
-- [ ] **Bước 5**: Trong `find_histogram_peaks`:
+- [x] **Bước 5**: Trong `find_histogram_peaks`:
   - Quét tìm cực đại địa phương thỏa mãn $H[i] > H[i-1]$ và $H[i] > H[i+1]$.
   - Gán $M_1$ là đỉnh đầu tiên, $M_2$ là đỉnh cao nhất ở vùng năng lượng cao.
   - Cài đặt đầy đủ 2 cơ chế fallback khi số đỉnh $< 2$.
-- [ ] **Bước 6**: Chạy kiểm thử tự động:
+- [x] **Bước 6**: Chạy kiểm thử tự động:
   ```bash
   uv run pytest tests/test_vad_pipeline.py -k "tt2"
   uv run python main.py --algo tt2 --no-plot

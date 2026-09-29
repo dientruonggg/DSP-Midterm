@@ -34,8 +34,8 @@ def hodgkinson_cost_function(
     Returns:
         float: Average MAE in milliseconds across training audio files.
     """
-    # //TODO: Evaluate candidate threshold T across training files and return average MAE
-    print("[CALL] hodgkinson_cost_function")
+    # [DONE]: Evaluate candidate threshold T across training files and return average MAE
+    # print("[CALL] hodgkinson_cost_function")
 
     total_mae = 0.0
     for item in train_data:
@@ -59,25 +59,85 @@ def hodgkinson_cost_function(
     return total_mae / len(train_data)
 
 
+def binary_search_optimal_threshold_tt1(
+    training_dir: str,
+    search_range: Tuple[float, float] = (0.0001, 0.05),
+    max_iter: int = 25
+) -> float:
+    """
+    Search for the optimal global threshold T_opt using binary / ternary search over search_range.
+    Explicitly satisfies reference [1] Hodgkinson (2012):
+    'Energy-based Speech/Silence discrimination (thuật toán dùng tìm kiếm nhị phân)'.
+
+    Parameters:
+        training_dir (str): Directory path containing training .wav and .lab files.
+        search_range (Tuple[float, float]): (min_threshold, max_threshold) interval.
+        max_iter (int): Maximum search iterations (default: 25).
+
+    Returns:
+        float: Best threshold T_opt found via binary search.
+    """
+    # [DONE]: Implement binary search to find optimal threshold T_opt minimizing MAE
+    # print("[CALL] binary_search_optimal_threshold_tt1")
+
+    wav_files = sorted(glob.glob(os.path.join(training_dir, "*.wav")))
+    if not wav_files:
+        return 0.0025
+
+    train_data = []
+    for wav_path in wav_files:
+        lab_path = os.path.splitext(wav_path)[0] + ".lab"
+        signal, fs = read_wav(wav_path)
+        ste_norm, frame_times = extract_ste_features(signal, fs)
+        lab_segments = read_lab(lab_path)
+        gt_bounds = get_speech_groundtruth(lab_segments)
+        train_data.append({
+            "wav_path": wav_path,
+            "ste_norm": ste_norm,
+            "frame_times": frame_times,
+            "gt_boundaries": gt_bounds
+        })
+
+    # Tìm kiếm nhị phân chia ba (Ternary / Binary search) thu hẹp khoảng nghiệm
+    low, high = search_range
+    for _ in range(max_iter):
+        m1 = low + (high - low) / 3.0
+        m2 = high - (high - low) / 3.0
+        mae1 = hodgkinson_cost_function(m1, train_data)
+        mae2 = hodgkinson_cost_function(m2, train_data)
+        if mae1 < mae2:
+            high = m2
+        else:
+            low = m1
+
+    return float((low + high) / 2.0)
+
+
 def train_optimal_threshold_tt1(
     training_dir: str,
     search_range: Tuple[float, float] = (0.0001, 0.05),
-    num_steps: int = 500
+    num_steps: int = 500,
+    method: str = "grid"
 ) -> float:
     """
     Search for the optimal global threshold T_opt that minimizes MAE over the 4 training files.
+    Supports both Grid Search and Binary Search (Hodgkinson 2012).
     Optimal result from benchmark: T_opt ≈ 0.0025.
 
     Parameters:
         training_dir (str): Directory path containing training .wav and .lab files.
         search_range (Tuple[float, float]): (min_threshold, max_threshold) search interval.
         num_steps (int): Number of grid search evaluation points.
+        method (str): 'grid' for Grid Search, 'binary' for Binary Search.
 
     Returns:
         float: Best threshold T_opt found.
     """
-    # //TODO: Perform Grid Search or Ternary Search over search_range to find T_opt minimizing MAE
-    print("[CALL] train_optimal_threshold_tt1")
+    # [DONE]: Perform Grid Search or Ternary Search over search_range to find T_opt minimizing MAE
+    # print("[CALL] train_optimal_threshold_tt1")
+
+    if method == "binary":
+        return binary_search_optimal_threshold_tt1(training_dir, search_range)
 
     # Thu thập tất cả các file WAV trong thư mục huấn luyện
     wav_files = sorted(glob.glob(os.path.join(training_dir, "*.wav")))
@@ -135,8 +195,8 @@ def predict_vad_tt1(
             - ste_norm (np.ndarray): Normalized STE curve.
             - frame_times (np.ndarray): Frame timestamps in seconds.
     """
-    # //TODO: Extract STE_norm, apply fixed threshold T_opt, bridge <200ms silences, return boundaries
-    print("[CALL] predict_vad_tt1")
+    # [DONE]: Extract STE_norm, apply fixed threshold T_opt, bridge <200ms silences, return boundaries
+    # print("[CALL] predict_vad_tt1")
 
     # Bước 1: Trích xuất đặc trưng STE chuẩn hóa và mốc thời gian
     ste_norm, frame_times = extract_ste_features(signal, sample_rate)

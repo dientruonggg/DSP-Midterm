@@ -192,8 +192,8 @@ def test_algorithms_tt3_gaussian_equal_variance_edge_case():
 
 
 def test_call_trace_logging(capsys):
-    """Verify functions emit [CALL] logging trace when invoked."""
+    """Verify functions do not emit noisy [CALL] logging traces when invoked."""
     _ = compute_ste(np.zeros((1, 320), dtype=np.float64))
     captured = capsys.readouterr()
-    assert "[CALL] compute_ste" in captured.out
+    assert "[CALL] compute_ste" not in captured.out
 
