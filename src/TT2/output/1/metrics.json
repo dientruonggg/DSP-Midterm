@@ -1,0 +1,100 @@
+{
+  "algorithm": "TT2",
+  "variant": "1",
+  "model": {
+    "name": "HistogramVAD",
+    "bins": 100,
+    "smoothing_width": 5,
+    "weight": 5.0
+  },
+  "history": [
+    {
+      "step": 1,
+      "file": "phone_F1",
+      "m1": 0.005,
+      "m2": 0.11499999999999999,
+      "threshold": 0.02333333333333333
+    },
+    {
+      "step": 2,
+      "file": "phone_M1",
+      "m1": 0.005,
+      "m2": 0.135,
+      "threshold": 0.02666666666666667
+    },
+    {
+      "step": 3,
+      "file": "studio_F1",
+      "m1": 0.005,
+      "m2": 0.045,
+      "threshold": 0.011666666666666667
+    },
+    {
+      "step": 4,
+      "file": "studio_M1",
+      "m1": 0.005,
+      "m2": 0.065,
+      "threshold": 0.015
+    }
+  ],
+  "summary": {
+    "mean_mae_ms": 17.500000000000092,
+    "mean_rmse_ms": 18.810783971926426,
+    "mean_frame_f1": 0.9766292389102057,
+    "mean_uv_recall": 0.8906433740388965
+  },
+  "files": [
+    {
+      "file": "phone_F2",
+      "gt_start": 1.02,
+      "gt_end": 4.04,
+      "pred_start": 1.05,
+      "pred_end": 4.01,
+      "delta_start_ms": 30.00000000000003,
+      "delta_end_ms": -30.00000000000025,
+      "mae_ms": 30.00000000000014,
+      "rmse_ms": 30.00000000000014,
+      "frame_f1": 0.9403508771929824,
+      "uv_recall": 0.7424242424242424
+    },
+    {
+      "file": "phone_M2",
+      "gt_start": 0.53,
+      "gt_end": 2.52,
+      "pred_start": 0.53,
+      "pred_end": 2.51,
+      "delta_start_ms": 0.0,
+      "delta_end_ms": -10.000000000000231,
+      "mae_ms": 5.0000000000001155,
+      "rmse_ms": 7.071067811865639,
+      "frame_f1": 0.9924433249370278,
+      "uv_recall": 0.9701492537313433
+    },
+    {
+      "file": "studio_F2",
+      "gt_start": 0.77,
+      "gt_end": 2.37,
+      "pred_start": 0.76,
+      "pred_end": 2.34,
+      "delta_start_ms": -10.000000000000009,
+      "delta_end_ms": -30.00000000000025,
+      "mae_ms": 20.000000000000128,
+      "rmse_ms": 22.360679774998065,
+      "frame_f1": 0.9874213836477987,
+      "uv_recall": 1.0
+    },
+    {
+      "file": "studio_M2",
+      "gt_start": 0.45,
+      "gt_end": 1.93,
+      "pred_start": 0.47,
+      "pred_end": 1.92,
+      "delta_start_ms": 19.99999999999996,
+      "delta_end_ms": -10.000000000000009,
+      "mae_ms": 14.999999999999986,
+      "rmse_ms": 15.811388300841875,
+      "frame_f1": 0.9863013698630138,
+      "uv_recall": 0.85
+    }
+  ]
+}

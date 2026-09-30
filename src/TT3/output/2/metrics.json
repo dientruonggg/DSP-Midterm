@@ -1,0 +1,85 @@
+{
+  "algorithm": "TT3",
+  "variant": "2",
+  "model": {
+    "name": "MultivariateGaussianVAD",
+    "features": [
+      "log STE",
+      "pre-emphasized STE",
+      "ZCR",
+      "high-frequency energy ratio"
+    ],
+    "fir_kernel": [
+      1.0,
+      -0.97
+    ],
+    "regularization": 0.08
+  },
+  "history": [
+    {
+      "step": 1,
+      "negative_log_likelihood": 3.95102146801643,
+      "regularization": 0.08
+    }
+  ],
+  "summary": {
+    "mean_mae_ms": 15.000000000000068,
+    "mean_rmse_ms": 16.343297969976962,
+    "mean_frame_f1": 0.9784583550918231,
+    "mean_uv_recall": 0.9031433740388964
+  },
+  "files": [
+    {
+      "file": "phone_F2",
+      "gt_start": 1.02,
+      "gt_end": 4.04,
+      "pred_start": 1.07,
+      "pred_end": 4.01,
+      "delta_start_ms": 50.00000000000004,
+      "delta_end_ms": -30.00000000000025,
+      "mae_ms": 40.00000000000014,
+      "rmse_ms": 41.23105625617672,
+      "frame_f1": 0.9347442680776015,
+      "uv_recall": 0.7424242424242424
+    },
+    {
+      "file": "phone_M2",
+      "gt_start": 0.53,
+      "gt_end": 2.52,
+      "pred_start": 0.53,
+      "pred_end": 2.51,
+      "delta_start_ms": 0.0,
+      "delta_end_ms": -10.000000000000231,
+      "mae_ms": 5.0000000000001155,
+      "rmse_ms": 7.071067811865639,
+      "frame_f1": 0.9924433249370278,
+      "uv_recall": 0.9701492537313433
+    },
+    {
+      "file": "studio_F2",
+      "gt_start": 0.77,
+      "gt_end": 2.37,
+      "pred_start": 0.76,
+      "pred_end": 2.37,
+      "delta_start_ms": -10.000000000000009,
+      "delta_end_ms": 0.0,
+      "mae_ms": 5.000000000000004,
+      "rmse_ms": 7.071067811865482,
+      "frame_f1": 0.9968847352024921,
+      "uv_recall": 1.0
+    },
+    {
+      "file": "studio_M2",
+      "gt_start": 0.45,
+      "gt_end": 1.93,
+      "pred_start": 0.46,
+      "pred_end": 1.92,
+      "delta_start_ms": 10.000000000000009,
+      "delta_end_ms": -10.000000000000009,
+      "mae_ms": 10.000000000000009,
+      "rmse_ms": 10.000000000000009,
+      "frame_f1": 0.9897610921501706,
+      "uv_recall": 0.9
+    }
+  ]
+}

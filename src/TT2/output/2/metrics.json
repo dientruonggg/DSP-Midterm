@@ -1,0 +1,83 @@
+{
+  "algorithm": "TT2",
+  "variant": "2",
+  "model": {
+    "name": "JointHistogramVAD",
+    "histogram": "H[normalized STE, ZCR] with 36x28 bins",
+    "fir_kernel": [
+      1.0,
+      -0.97
+    ],
+    "smoothing": 1.0,
+    "energy_floor": 0.0018848125355322566
+  },
+  "history": [
+    {
+      "step": 1,
+      "negative_log_likelihood": 0.46303302642071664,
+      "energy_floor": 0.0018848125355322566,
+      "speech_frames": 796,
+      "silence_frames": 501
+    }
+  ],
+  "summary": {
+    "mean_mae_ms": 20.00000000000004,
+    "mean_rmse_ms": 21.55645682152303,
+    "mean_frame_f1": 0.9882033599892146,
+    "mean_uv_recall": 0.9474050203527816
+  },
+  "files": [
+    {
+      "file": "phone_F2",
+      "gt_start": 1.02,
+      "gt_end": 4.04,
+      "pred_start": 1.05,
+      "pred_end": 4.01,
+      "delta_start_ms": 30.00000000000003,
+      "delta_end_ms": -30.00000000000025,
+      "mae_ms": 30.00000000000014,
+      "rmse_ms": 30.00000000000014,
+      "frame_f1": 0.9882747068676717,
+      "uv_recall": 0.9545454545454546
+    },
+    {
+      "file": "phone_M2",
+      "gt_start": 0.53,
+      "gt_end": 2.52,
+      "pred_start": 0.52,
+      "pred_end": 2.52,
+      "delta_start_ms": -10.000000000000009,
+      "delta_end_ms": 0.0,
+      "mae_ms": 5.000000000000004,
+      "rmse_ms": 7.071067811865482,
+      "frame_f1": 0.9974937343358395,
+      "uv_recall": 0.9850746268656716
+    },
+    {
+      "file": "studio_F2",
+      "gt_start": 0.77,
+      "gt_end": 2.37,
+      "pred_start": 0.76,
+      "pred_end": 2.33,
+      "delta_start_ms": -10.000000000000009,
+      "delta_end_ms": -40.000000000000036,
+      "mae_ms": 25.00000000000002,
+      "rmse_ms": 29.15475947422653,
+      "frame_f1": 0.9842271293375394,
+      "uv_recall": 1.0
+    },
+    {
+      "file": "studio_M2",
+      "gt_start": 0.45,
+      "gt_end": 1.93,
+      "pred_start": 0.47,
+      "pred_end": 1.91,
+      "delta_start_ms": 19.99999999999996,
+      "delta_end_ms": -20.000000000000018,
+      "mae_ms": 19.99999999999999,
+      "rmse_ms": 19.99999999999999,
+      "frame_f1": 0.9828178694158076,
+      "uv_recall": 0.85
+    }
+  ]
+}

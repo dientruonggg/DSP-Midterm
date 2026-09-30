@@ -1,0 +1,83 @@
+{
+  "algorithm": "TT3",
+  "variant": "1",
+  "model": {
+    "name": "GaussianEnergyVAD",
+    "threshold": 0.002021959336065921,
+    "silence": {
+      "mean": 0.00033472287265910597,
+      "std": 0.000466480631620367
+    },
+    "speech": {
+      "mean": 0.19651519980098986,
+      "std": 0.23327037036291914
+    }
+  },
+  "history": [
+    {
+      "step": 1,
+      "negative_log_likelihood": -2.4372307469776495,
+      "threshold": 0.002021959336065921
+    }
+  ],
+  "summary": {
+    "mean_mae_ms": 11.25000000000001,
+    "mean_rmse_ms": 14.874368670764584,
+    "mean_frame_f1": 0.9936431480486931,
+    "mean_uv_recall": 0.9712686567164178
+  },
+  "files": [
+    {
+      "file": "phone_F2",
+      "gt_start": 1.02,
+      "gt_end": 4.04,
+      "pred_start": 1.02,
+      "pred_end": 4.09,
+      "delta_start_ms": 0.0,
+      "delta_end_ms": 49.99999999999982,
+      "mae_ms": 24.99999999999991,
+      "rmse_ms": 35.35533905932725,
+      "frame_f1": 0.9901315789473684,
+      "uv_recall": 1.0
+    },
+    {
+      "file": "phone_M2",
+      "gt_start": 0.53,
+      "gt_end": 2.52,
+      "pred_start": 0.52,
+      "pred_end": 2.52,
+      "delta_start_ms": -10.000000000000009,
+      "delta_end_ms": 0.0,
+      "mae_ms": 5.000000000000004,
+      "rmse_ms": 7.071067811865482,
+      "frame_f1": 0.9974937343358395,
+      "uv_recall": 0.9850746268656716
+    },
+    {
+      "file": "studio_F2",
+      "gt_start": 0.77,
+      "gt_end": 2.37,
+      "pred_start": 0.76,
+      "pred_end": 2.36,
+      "delta_start_ms": -10.000000000000009,
+      "delta_end_ms": -10.000000000000231,
+      "mae_ms": 10.00000000000012,
+      "rmse_ms": 10.00000000000012,
+      "frame_f1": 0.99375,
+      "uv_recall": 1.0
+    },
+    {
+      "file": "studio_M2",
+      "gt_start": 0.45,
+      "gt_end": 1.93,
+      "pred_start": 0.46,
+      "pred_end": 1.93,
+      "delta_start_ms": 10.000000000000009,
+      "delta_end_ms": 0.0,
+      "mae_ms": 5.000000000000004,
+      "rmse_ms": 7.071067811865482,
+      "frame_f1": 0.9931972789115647,
+      "uv_recall": 0.9
+    }
+  ]
+}
