@@ -59,25 +59,60 @@ def hodgkinson_cost_function(
     return total_mae / len(train_data)
 
 
+def signed_duration_error(
+    threshold: float,
+    train_data: List[Dict[str, Any]]
+) -> float:
+    """
+    Compute average signed duration error: (predicted_duration - gt_duration).
+    Đại lượng này giảm đơn điệu khi T tăng (ngưỡng cao hơn -> phát hiện ít hơn -> thời lượng ngắn hơn),
+    nên phù hợp để áp dụng tìm kiếm nhị phân tìm nghiệm = 0.
+
+    Parameters:
+        threshold (float): Candidate normalized STE threshold.
+        train_data (List[Dict[str, Any]]): Pre-extracted features.
+
+    Returns:
+        float: Average signed duration error in seconds.
+    """
+    total = 0.0
+    for item in train_data:
+        ste_norm = item["ste_norm"]
+        frame_times = item["frame_times"]
+        gt_bounds = item["gt_boundaries"]
+
+        decisions = apply_threshold(ste_norm, threshold)
+        smoothed = remove_short_silences_200ms(decisions)
+        pred_bounds = extract_speech_boundaries(smoothed, frame_times)
+
+        gt_dur = gt_bounds[1] - gt_bounds[0]
+        pred_dur = pred_bounds[1] - pred_bounds[0]
+        total += (pred_dur - gt_dur)
+
+    return total / len(train_data)
+
+
 def binary_search_optimal_threshold_tt1(
     training_dir: str,
     search_range: Tuple[float, float] = (0.0001, 0.05),
-    max_iter: int = 25
+    max_iter: int = 50
 ) -> float:
     """
-    Search for the optimal global threshold T_opt using binary / ternary search over search_range.
-    Explicitly satisfies reference [1] Hodgkinson (2012):
+    Search for the optimal global threshold T_opt using true binary search.
+    Tìm kiếm nhị phân trên đại lượng sai số thời lượng có dấu (signed duration error),
+    đại lượng này đơn điệu giảm theo T nên binary search hợp lệ.
+    Theo tài liệu tham khảo [1] Hodgkinson (2012):
     'Energy-based Speech/Silence discrimination (thuật toán dùng tìm kiếm nhị phân)'.
 
     Parameters:
         training_dir (str): Directory path containing training .wav and .lab files.
         search_range (Tuple[float, float]): (min_threshold, max_threshold) interval.
-        max_iter (int): Maximum search iterations (default: 25).
+        max_iter (int): Maximum search iterations (default: 50).
 
     Returns:
         float: Best threshold T_opt found via binary search.
     """
-    # [DONE]: Implement binary search to find optimal threshold T_opt minimizing MAE
+    # [DONE]: Implement binary search to find optimal threshold T_opt
     # print("[CALL] binary_search_optimal_threshold_tt1")
 
     wav_files = sorted(glob.glob(os.path.join(training_dir, "*.wav")))
@@ -98,17 +133,18 @@ def binary_search_optimal_threshold_tt1(
             "gt_boundaries": gt_bounds
         })
 
-    # Tìm kiếm nhị phân chia ba (Ternary / Binary search) thu hẹp khoảng nghiệm
+    # Tìm kiếm nhị phân: sai số thời lượng có dấu giảm đơn điệu theo T
+    # Khi T nhỏ -> phát hiện nhiều -> duration lớn -> error > 0
+    # Khi T lớn -> phát hiện ít -> duration nhỏ -> error < 0
+    # Tìm T sao cho signed_duration_error ≈ 0
     low, high = search_range
     for _ in range(max_iter):
-        m1 = low + (high - low) / 3.0
-        m2 = high - (high - low) / 3.0
-        mae1 = hodgkinson_cost_function(m1, train_data)
-        mae2 = hodgkinson_cost_function(m2, train_data)
-        if mae1 < mae2:
-            high = m2
+        mid = (low + high) / 2.0
+        err = signed_duration_error(mid, train_data)
+        if err > 0:
+            low = mid
         else:
-            low = m1
+            high = mid
 
     return float((low + high) / 2.0)
 
@@ -162,7 +198,9 @@ def train_optimal_threshold_tt1(
         })
 
     # Tiến hành quét lưới (Grid Search) trong khoảng quy định
-    candidates = np.linspace(search_range[0], search_range[1], num_steps)
+    # Tạo danh sách ứng viên thủ công (không dùng np.linspace)
+    step_size = (search_range[1] - search_range[0]) / (num_steps - 1) if num_steps > 1 else 0
+    candidates = [search_range[0] + i * step_size for i in range(num_steps)]
     best_t = 0.0025
     best_mae = float("inf")
 

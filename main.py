@@ -148,6 +148,7 @@ def plot_vad_result(
 
 def run_pipeline(
     test_dir: str = "TinHieuKiemThu",
+    train_dir: str = "TinHieuHuanLuyen",
     algorithm_name: str = "tt3",
     show_plots: bool = True,
     save_dir: Optional[str] = None
@@ -196,16 +197,31 @@ def run_pipeline(
         lab_segments = read_lab(lab_path)
         gt_bounds = get_speech_groundtruth(lab_segments)
 
-        # Chạy thuật toán được chỉ định
+        # Chạy thuật toán được chỉ định (ngưỡng được tính từ tập huấn luyện, không hardcode)
         if algorithm_name == "tt1":
-            pred_s, pred_e, ste_norm, frame_times = predict_vad_tt1(signal, fs, threshold=0.0025)
-            algo_info = "TT1 (Hodgkinson, T=0.0025)"
+            # Tính T_opt bằng binary search trên tập huấn luyện
+            if not hasattr(run_pipeline, '_tt1_threshold'):
+                from algorithms.tt1_hodgkinson import binary_search_optimal_threshold_tt1
+                run_pipeline._tt1_threshold = binary_search_optimal_threshold_tt1(train_dir)
+                print(f"[TT1] Ngưỡng tính từ huấn luyện: T_opt = {run_pipeline._tt1_threshold:.6f}")
+            t_opt_tt1 = run_pipeline._tt1_threshold
+            pred_s, pred_e, ste_norm, frame_times = predict_vad_tt1(signal, fs, threshold=t_opt_tt1)
+            algo_info = f"TT1 (Hodgkinson, T={t_opt_tt1:.4f})"
         elif algorithm_name == "tt2":
             pred_s, pred_e, ste_norm, frame_times, t_adapt = predict_vad_tt2(signal, fs, weight_w=5.0)
             algo_info = f"TT2 (Histogram W=5, T={t_adapt:.4f})"
         else:
-            pred_s, pred_e, ste_norm, frame_times = predict_vad_tt3(signal, fs, threshold=0.002864)
-            algo_info = "TT3 (Gaussian Bayes, T=0.00286)"
+            # Tính T_Bayes từ phân bố Gauss trên tập huấn luyện
+            if not hasattr(run_pipeline, '_tt3_threshold'):
+                sil_ste, sp_ste = extract_speech_silence_ste_frames(train_dir)
+                mu_sil, sigma_sil, mu_sp, sigma_sp = estimate_gaussian_parameters(sil_ste, sp_ste)
+                run_pipeline._tt3_threshold = solve_bayes_decision_threshold(mu_sil, sigma_sil, mu_sp, sigma_sp)
+                print(f"[TT3] Ngưỡng Bayes tính từ huấn luyện: T_Bayes = {run_pipeline._tt3_threshold:.6f}")
+                print(f"  Silence: mu={mu_sil:.6f}, sigma={sigma_sil:.6f}")
+                print(f"  Speech:  mu={mu_sp:.6f}, sigma={sigma_sp:.6f}")
+            t_bayes = run_pipeline._tt3_threshold
+            pred_s, pred_e, ste_norm, frame_times = predict_vad_tt3(signal, fs, threshold=t_bayes)
+            algo_info = f"TT3 (Gaussian Bayes, T={t_bayes:.6f})"
 
         # Đánh giá sai số MAE & RMSE (ms)
         pred_bounds = (pred_s, pred_e)
@@ -296,8 +312,15 @@ def main() -> None:
             print(f"-> Ngưỡng Bayes tối ưu lý thuyết TT3: T_Bayes = {t_bayes:.6f} (Chuẩn: 0.002864)")
         return
 
+    # Xóa cache ngưỡng từ lần chạy trước (nếu có)
+    if hasattr(run_pipeline, '_tt1_threshold'):
+        delattr(run_pipeline, '_tt1_threshold')
+    if hasattr(run_pipeline, '_tt3_threshold'):
+        delattr(run_pipeline, '_tt3_threshold')
+
     run_pipeline(
         test_dir=args.test_dir,
+        train_dir=args.train_dir,
         algorithm_name=args.algo,
         show_plots=not args.no_plot,
         save_dir=args.save_dir

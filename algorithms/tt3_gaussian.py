@@ -5,7 +5,10 @@ Description: Thuật toán 3 (TT3) - Phân đoạn dựa trên Phân bố xác s
              Khảo sát toàn bộ các khung Silence và Speech trên 4 file huấn luyện,
              ước lượng các tham số kỳ vọng và độ lệch chuẩn (mu_sil, sigma_sil, mu_sp, sigma_sp),
              và giải phương trình phân bố Gauss xác suất Bayes p(x|sil) = p(x|sp)
-             để xác định ngưỡng tối ưu lý thuyết T_Bayes ≈ 0.002864.
+             để xác định ngưỡng tối ưu lý thuyết T_Bayes (tính động từ dữ liệu huấn luyện).
+
+             Lưu ý: Phân bố STE của tiếng nói lệch mạnh (sigma_sp > mu_sp), vi phạm giả thiết
+             Gauss đối xứng. Kết quả T_Bayes chỉ là xấp xỉ lý thuyết.
 """
 
 import os
@@ -103,7 +106,7 @@ def solve_bayes_decision_threshold(
         A * x^2 + B * x + C = 0
 
     Returns:
-        float: Optimal Bayes threshold T_Bayes (approximately 0.002864).
+        float: Optimal Bayes threshold T_Bayes (tính động từ dữ liệu huấn luyện).
     """
     # [DONE]: Solve quadratic equation for Bayes decision boundary where Gaussian PDFs intersect
     # print("[CALL] solve_bayes_decision_threshold")
@@ -147,7 +150,7 @@ def solve_bayes_decision_threshold(
 def predict_vad_tt3(
     signal: np.ndarray,
     sample_rate: int,
-    threshold: float = 0.002864
+    threshold: float = 0.0019
 ) -> Tuple[float, float, np.ndarray, np.ndarray]:
     """
     Run Voice Activity Detection (VAD) using Gaussian Bayes decision threshold TT3.
@@ -155,7 +158,7 @@ def predict_vad_tt3(
     Parameters:
         signal (np.ndarray): 1D audio sample array.
         sample_rate (int): Sampling rate (Hz).
-        threshold (float): Bayes threshold T_Bayes (default: 0.002864).
+        threshold (float): Bayes threshold T_Bayes (mặc định tính từ dữ liệu huấn luyện).
 
     Returns:
         Tuple[float, float, np.ndarray, np.ndarray]:

@@ -37,9 +37,11 @@ def frame_signal(
 
     num_samples = len(signal)
     if num_samples < frame_len:
-        # Trường hợp tín hiệu quá ngắn, đệm thêm số 0
+        # Trường hợp tín hiệu quá ngắn, đệm thêm số 0 (tự viết, không dùng np.pad)
         pad_len = frame_len - num_samples
-        signal = np.pad(signal, (0, pad_len), mode="constant")
+        padded = np.zeros(frame_len, dtype=signal.dtype)
+        padded[:num_samples] = signal
+        signal = padded
         num_samples = len(signal)
 
     # Tính tổng số khung có thể trích xuất

@@ -34,16 +34,19 @@ def compute_histogram_100bins(
     # [DONE]: Construct 100-bin histogram for STE_norm values in range [0, 1] using basic array math
     # print("[CALL] compute_histogram_100bins")
 
-    # Tạo 101 mốc biên chia đều đoạn [0.0, 1.0] thành 100 bins
-    bin_edges = np.linspace(0.0, 1.0, num_bins + 1)
+    # Tạo 101 mốc biên chia đều đoạn [0.0, 1.0] thành 100 bins (tự viết, không dùng np.linspace)
+    bin_edges = np.array([i / num_bins for i in range(num_bins + 1)], dtype=np.float64)
     counts = np.zeros(num_bins, dtype=np.float64)
 
-    # Đếm số lượng mẫu STE_norm rơi vào từng khoảng bin
-    bin_indices = np.digitize(ste_norm, bin_edges) - 1
-    # Đảm bảo giá trị tại biên 1.0 nằm vào bin cuối cùng (index num_bins - 1)
-    bin_indices = np.clip(bin_indices, 0, num_bins - 1)
-
-    for idx in bin_indices:
+    # Đếm số lượng mẫu STE_norm rơi vào từng khoảng bin (tự viết, không dùng np.digitize/np.clip)
+    bin_width = 1.0 / num_bins
+    for val in ste_norm:
+        idx = int(val / bin_width)
+        # Đảm bảo giá trị tại biên 1.0 nằm vào bin cuối cùng (index num_bins - 1)
+        if idx < 0:
+            idx = 0
+        elif idx >= num_bins:
+            idx = num_bins - 1
         counts[idx] += 1.0
 
     # Tính tâm của từng bin
@@ -105,8 +108,13 @@ def find_histogram_peaks(
 
     n = len(smoothed_hist)
     peaks = []
-    i = 1
 
+    # Kiểm tra bin 0 có phải cực đại địa phương hay không
+    # (Năng lượng khoảng lặng ~0.0003 nằm hết trong bin 0 và thường là đỉnh cao nhất)
+    if n > 1 and smoothed_hist[0] >= smoothed_hist[1]:
+        peaks.append(0)
+
+    i = 1
     # Quét tìm các điểm cực đại địa phương, hỗ trợ vùng đỉnh bằng phẳng (plateau)
     while i < n - 1:
         if smoothed_hist[i] > smoothed_hist[i - 1]:
