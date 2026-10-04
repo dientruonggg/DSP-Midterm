@@ -65,3 +65,19 @@ Không. F0 được ước lượng bằng tự tương quan và chỉ vẽ đ�
 2. “The joint histogram preserves more unvoiced frames, but slightly shifts the outer boundaries.”
 3. “With only four training recordings, the simple Gaussian is more reliable than full covariance.”
 
+## Slide thuyết trình & Kịch bản 3 phút
+
+- **Link Slide Canva của nhóm:** [Canva Slide VAD Midterm](https://canva.link/jhh1gex7ybd87yk)
+
+### Phân bổ cấu trúc 4 slide & căn giờ cho từng thành viên (3 phút):
+
+| Slide | Nội dung hiển thị | Lời thoại mẫu (Script thuyết trình) | Thời lượng |
+|---|---|---|:---:|
+| **Slide 1: Cover** | Tiêu đề nhiệm vụ (TT1/TT2/TT3), Tên SV, MSSV | *“Kính thưa Thầy, em tên là [Tên], hôm nay em xin báo cáo nhiệm vụ [TT1/TT2/TT3] trong đề tài Phân đoạn tiếng nói và khoảng lặng.”* | **10 giây** |
+| **Slide 2: Giải pháp lõi (Tìm ngưỡng)** | Chèn **1 ảnh duy nhất** về giải pháp trên tập Train (Ảnh Histogram cho TT2, Ảnh phân bố Gauss `gaussian_distribution_slide.png` cho TT3) và giá trị ngưỡng $T$ | *“Để tìm ngưỡng dùng chung cho 4 file huấn luyện, em phân tích phân bố đặc trưng của khoảng lặng và tiếng nói. Điểm cắt tối ưu đạt được tại $T = [giá\_trị]$. Đồ thị cho thấy vùng phân tách rõ rệt giữa hai trạng thái.”* | **45 - 50 giây** |
+| **Slide 3: Kết quả thực nghiệm** | • Bảng số liệu MAE 4 file kiểm thử<br>• 1-2 figure đẹp nhất (Waveform, STE, vạch đỏ Ground truth, vạch xanh Predicted) | *“Áp dụng trên 4 file kiểm thử, thuật toán đạt sai số biên trung bình MAE là [X] ms. Ở môi trường studio ít nhiễu sai số chỉ từ 5-10 ms; file phone_F2 sai số lớn hơn một chút do năng lượng đuôi âm vô thanh giảm dần sát mức nhiễu nền.”* | **60 - 70 giây** |
+| **Slide 4: Kết luận & Đánh giá** | 3 gạch đầu dòng ngắn về ưu/nhược điểm chính của phương pháp | *“Tóm lại, thuật toán có ưu điểm là [tính thích nghi / tự động học tham số / chạy nhanh]. Hạn chế là [nhạy với ngưỡng / giả thiết xấp xỉ]. Em xin kết thúc phần slide và chuyển sang 1 phút demo chương trình.”* | **20 giây** |
+
+⏱️ **Tổng thời gian nói:** Khoảng 2 phút 20 giây - 2 phút 30 giây (an toàn tuyệt đối, không lo bị cắt chuông 3 phút).
+
+

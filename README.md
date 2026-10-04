@@ -33,6 +33,7 @@ Open one notebook and choose **Restart Kernel and Run All Cells**. No separate P
 
 ## Submission outputs
 
+- Presentation slides (Canva): [Canva Slide VAD Midterm](https://canva.link/jhh1gex7ybd87yk)
 - English report source: `report/VAD_MIDTERM_REPORT.md`
 - Vietnamese explanation source: `report/VAD_MIDTERM_REPORT_VI.md`
 - Vietnamese defense notes: `report/DEFENSE_NOTES_VI.md`
@@ -40,3 +41,4 @@ Open one notebook and choose **Restart Kernel and Run All Cells**. No separate P
 - Vietnamese explanation PDF: `output/pdf/VAD_MIDTERM_REPORT_VI.pdf`
 
 Replace the student-name placeholders before submission.
+
