@@ -37,8 +37,10 @@ Open one notebook and choose **Restart Kernel and Run All Cells**. No separate P
 - English report source: `report/VAD_MIDTERM_REPORT.md`
 - Vietnamese explanation source: `report/VAD_MIDTERM_REPORT_VI.md`
 - Vietnamese defense notes: `report/DEFENSE_NOTES_VI.md`
+- Vietnamese defense appendix (Backup Q&A): `report/PHU_LUC_VAN_DAP_VI.md`
 - Report PDF: `output/pdf/VAD_MIDTERM_REPORT.pdf`
 - Vietnamese explanation PDF: `output/pdf/VAD_MIDTERM_REPORT_VI.pdf`
 
 Replace the student-name placeholders before submission.
+
 
