@@ -11,12 +11,12 @@
 
 ---
 
-## MỤC LỤC PHỤ LỤC
-1. [Phụ lục A: Bảng thông số cấu hình hệ thống (System Hyperparameters)](#phụ-lục-a-bảng-thông-số-cấu-hình-hệ-thống)
-2. [Phụ lục B: Bảng đối chiếu định lượng 4 chỉ số (MAE, RMSE, Frame F1, UV Recall)](#phụ-lục-b-bảng-đối-chiếu-định-lượng-4-chỉ-số)
-3. [Phụ lục C: Bộ hình ảnh dự phòng & Giải thích hiện tượng từng file](#phụ-lục-c-bộ-hình-ảnh-dự-phòng--giải-thích-hiện-tượng-từng-file)
-4. [Phụ lục D: Kịch bản ứng phó 8 câu hỏi "bẫy" kinh điển của Thầy](#phụ-lục-d-kịch-bản-ứng-phó-8-câu-hỏi-bẫy-kinh-điển-của-thầy)
-5. [Phụ lục E: Kiến thức nâng cao cho phần mở rộng (Advanced DSP - Variant 2)](#phụ-lục-e-kiến-thức-nâng-cao-cho-phần-mở-rộng)
+## 🗺️ BẢN ĐỒ 5 SLIDE PHỤ LỤC TRÊN CANVA (SLIDES 18 - 22)
+1. **[Slide 18] Phụ lục 01: Tiền xử lý & Bộ tham số chuẩn (Framing, 200ms silence bridge, 50ms min speech)**
+2. **[Slide 19] Phụ lục 02: Kết quả trung gian TT1 (Tìm kiếm nhị phân, 40 bước lặp, T_opt = 0.00261)**
+3. **[Slide 20] Phụ lục 03: Kết quả trung gian TT2 (Histogram 100 bins, 5-bin MA, W=5, 4 file train)**
+4. **[Slide 21] Phụ lục 04: Kết quả trung gian TT3 (Mean/Std Sil & Sp, Giải pt Bayes, T_Bayes = 0.00202)**
+5. **[Slide 22] Phụ lục 05: Đối thoại phản biện & 8 câu hỏi bẫy vấn đáp kinh điển**
 
 ---
 
