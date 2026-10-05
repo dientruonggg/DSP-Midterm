@@ -7,7 +7,7 @@ Thư mục triển khai toàn diện giải pháp Thuật toán 3 (TT3) phân đ
 ## 1. Cấu trúc thư mục
 
 ```text
-TT3/
+src/TT3/
 ├── src/                          # Toàn bộ mã nguồn Python tự code (không dùng toolbox ngoài)
 │   ├── __init__.py
 │   ├── io_utils.py               # Đọc file âm thanh WAV PCM 16-bit và nhãn Praat .lab
@@ -16,10 +16,12 @@ TT3/
 │   ├── metrics.py                # Tính sai số định lượng MAE và RMSE (miligiây)
 │   ├── visualization.py          # Vẽ đồ thị phân bố Gauss và 04 figure kiểm thử
 │   └── main.py                   # Điểm khởi chạy trung tâm của module src
-├── notebooks/                    # Thư mục chứa các file Jupyter Notebook (kèm alias tại notebook/)
+├── notebook/                     # Thư mục chứa các file Jupyter Notebook
 │   ├── TT3_Gaussian_VAD.ipynb    # Báo cáo thực nghiệm Slide bằng Tiếng Việt (pre-computed)
 │   ├── TT3_Gaussian_VAD_EN.ipynb # Báo cáo thực nghiệm Slide bằng Tiếng Anh (pre-computed)
-│   └── TT3.ipynb                 # Bản sao tham chiếu chuẩn
+│   ├── TT3.ipynb                 # Bản sao tham chiếu chuẩn
+│   ├── 1.ipynb                   # Baseline 1D Gaussian (định dạng tương thích bài tập)
+│   └── 2.ipynb                   # Mô hình Gaussian mở rộng đa biến
 ├── output/                       # Các biểu đồ và figure kết quả phân đoạn
 │   ├── gaussian_distributions_tt3.png # Đồ thị phân bố xác suất Gauss và ngưỡng Bayes
 │   ├── phone_F2_vad.png          # Đồ thị Waveform + STE + mốc biên file phone_F2
@@ -58,19 +60,24 @@ TT3/
 ---
 
 ## 4. Hướng dẫn chạy chương trình
-
+ 
 ### Chạy chương trình chính (Main Script):
 ```bash
 # Từ thư mục gốc dự án:
-uv run python TT3/main.py
+uv run python src/TT3/main.py
 
 # Hoặc từ bên trong module src:
-uv run python TT3/src/main.py
+uv run python src/TT3/src/main.py
+```
+
+### Chạy script tự động tạo và thực thi lại Notebook:
+```bash
+uv run python src/TT3/build_notebook.py
 ```
 
 ### Mở và xem Notebook:
-- Phiên bản tiếng Việt: `TT3/notebooks/TT3_Gaussian_VAD.ipynb`
-- Phiên bản tiếng Anh: `TT3/notebooks/TT3_Gaussian_VAD_EN.ipynb`
+- Phiên bản tiếng Việt: `src/TT3/notebook/TT3_Gaussian_VAD.ipynb`
+- Phiên bản tiếng Anh: `src/TT3/notebook/TT3_Gaussian_VAD_EN.ipynb`
 ```bash
-uv run jupyter lab TT3/notebooks/TT3_Gaussian_VAD.ipynb
+uv run jupyter lab src/TT3/notebook/TT3_Gaussian_VAD.ipynb
 ```

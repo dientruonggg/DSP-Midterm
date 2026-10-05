@@ -37,28 +37,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 try:
-    from TT3.src.io_utils import read_wav, read_lab, get_speech_groundtruth
-    from TT3.src.features import extract_ste_features
-    from TT3.src.gaussian_vad import (
+    from src.TT3.src.io_utils import read_wav, read_lab, get_speech_groundtruth
+    from src.TT3.src.features import extract_ste_features
+    from src.TT3.src.gaussian_vad import (
         survey_training_data,
         estimate_gaussian_parameters,
         solve_bayes_threshold,
         predict_vad
     )
-    from TT3.src.metrics import evaluate_vad_file, summarize_evaluation
-    from TT3.src.visualization import plot_gaussian_distributions, plot_single_file_result
+    from src.TT3.src.metrics import evaluate_vad_file, summarize_evaluation
+    from src.TT3.src.visualization import plot_gaussian_distributions, plot_single_file_result
 except (ImportError, ModuleNotFoundError):
     try:
-        from src.io_utils import read_wav, read_lab, get_speech_groundtruth
-        from src.features import extract_ste_features
-        from src.gaussian_vad import (
+        from TT3.src.io_utils import read_wav, read_lab, get_speech_groundtruth
+        from TT3.src.features import extract_ste_features
+        from TT3.src.gaussian_vad import (
             survey_training_data,
             estimate_gaussian_parameters,
             solve_bayes_threshold,
             predict_vad
         )
-        from src.metrics import evaluate_vad_file, summarize_evaluation
-        from src.visualization import plot_gaussian_distributions, plot_single_file_result
+        from TT3.src.metrics import evaluate_vad_file, summarize_evaluation
+        from TT3.src.visualization import plot_gaussian_distributions, plot_single_file_result
     except (ImportError, ModuleNotFoundError):
         from io_utils import read_wav, read_lab, get_speech_groundtruth
         from features import extract_ste_features
@@ -274,7 +274,7 @@ def main() -> None:
     # Xác định các đường dẫn thư mục dự án
     train_dir = os.path.join(PROJECT_ROOT, "TinHieuHuanLuyen")
     test_dir = os.path.join(PROJECT_ROOT, "TinHieuKiemThu")
-    output_dir = os.path.join(PROJECT_ROOT, "TT3", "output")
+    output_dir = os.path.join(PROJECT_ROOT, "src", "TT3", "output")
     os.makedirs(output_dir, exist_ok=True)
 
     # 1. Chạy pha huấn luyện tìm tham số Gauss và ngưỡng Bayes

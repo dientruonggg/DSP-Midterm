@@ -98,7 +98,7 @@ Xác định vị trí các thư mục `TinHieuHuanLuyen`, `TinHieuKiemThu` và 
 PROJECT_ROOT = find_project_root()
 TRAIN_DIR = PROJECT_ROOT / "TinHieuHuanLuyen"
 TEST_DIR = PROJECT_ROOT / "TinHieuKiemThu"
-OUTPUT_DIR = PROJECT_ROOT / "TT3" / "output"
+OUTPUT_DIR = PROJECT_ROOT / "src" / "TT3" / "output"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 print(f"Thư mục huấn luyện : {TRAIN_DIR}")
@@ -642,7 +642,7 @@ Locate repository directories for `TinHieuHuanLuyen` (training data), `TinHieuKi
 PROJECT_ROOT = find_project_root()
 TRAIN_DIR = PROJECT_ROOT / "TinHieuHuanLuyen"
 TEST_DIR = PROJECT_ROOT / "TinHieuKiemThu"
-OUTPUT_DIR = PROJECT_ROOT / "TT3" / "output"
+OUTPUT_DIR = PROJECT_ROOT / "src" / "TT3" / "output"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 print(f"Training Directory : {TRAIN_DIR}")
@@ -1114,14 +1114,13 @@ Each figure displays the audio waveform and normalized STE curve, overlaid with 
 
 
 def run_build():
-    notebooks_dir = PROJECT_ROOT / "TT3" / "notebooks"
-    notebook_alias_dir = PROJECT_ROOT / "TT3" / "notebook"
-    notebooks_dir.mkdir(parents=True, exist_ok=True)
-    notebook_alias_dir.mkdir(parents=True, exist_ok=True)
+    tt3_dir = PROJECT_ROOT / "src" / "TT3"
+    notebook_dir = tt3_dir / "notebook"
+    notebook_dir.mkdir(parents=True, exist_ok=True)
 
     print("[*] Generating Vietnamese notebook (TT3_Gaussian_VAD.ipynb)...")
     nb_vi = build_tt3_notebook_vi()
-    vi_path = notebooks_dir / "TT3_Gaussian_VAD.ipynb"
+    vi_path = notebook_dir / "TT3_Gaussian_VAD.ipynb"
     with open(vi_path, "w", encoding="utf-8") as f:
         nbformat.write(nb_vi, f)
 
@@ -1134,7 +1133,7 @@ def run_build():
 
     print("[*] Generating English notebook (TT3_Gaussian_VAD_EN.ipynb)...")
     nb_en = build_tt3_notebook_en()
-    en_path = notebooks_dir / "TT3_Gaussian_VAD_EN.ipynb"
+    en_path = notebook_dir / "TT3_Gaussian_VAD_EN.ipynb"
     with open(en_path, "w", encoding="utf-8") as f:
         nbformat.write(nb_en, f)
 
@@ -1145,17 +1144,16 @@ def run_build():
         nbformat.write(nb_en, f)
     print(f"[V] English notebook saved and executed at: {en_path}")
 
-    # Copy files to TT3/notebook/ and TT3/
-    for fname in ["TT3_Gaussian_VAD.ipynb", "TT3_Gaussian_VAD_EN.ipynb"]:
-        src_file = notebooks_dir / fname
-        shutil.copy2(src_file, notebook_alias_dir / fname)
-        shutil.copy2(src_file, PROJECT_ROOT / "TT3" / fname)
+    # Alias TT3.ipynb in notebook directory
+    shutil.copy2(vi_path, notebook_dir / "TT3.ipynb")
 
-    # Alias TT3.ipynb
-    shutil.copy2(vi_path, PROJECT_ROOT / "TT3" / "TT3.ipynb")
-    shutil.copy2(vi_path, notebooks_dir / "TT3.ipynb")
-    shutil.copy2(vi_path, notebook_alias_dir / "TT3.ipynb")
-    print(f"[V] Synchronized notebooks across TT3/notebooks/, TT3/notebook/, and TT3/root.")
+    # Copy baseline notebooks 1.ipynb and 2.ipynb into notebook directory for completeness
+    for base_nb in ["1.ipynb", "2.ipynb"]:
+        src_nb = tt3_dir / base_nb
+        if src_nb.exists():
+            shutil.copy2(src_nb, notebook_dir / base_nb)
+
+    print(f"[V] Synchronized all notebooks in: {notebook_dir}")
 
 
 if __name__ == "__main__":
