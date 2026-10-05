@@ -14,8 +14,16 @@ import math
 import numpy as np
 from typing import Tuple, List, Dict, Any
 
-from TT3.io_utils import read_wav, read_lab, get_speech_groundtruth
-from TT3.features import extract_ste_features
+try:
+    from TT3.src.io_utils import read_wav, read_lab, get_speech_groundtruth
+    from TT3.src.features import extract_ste_features
+except (ImportError, ModuleNotFoundError):
+    try:
+        from src.io_utils import read_wav, read_lab, get_speech_groundtruth
+        from src.features import extract_ste_features
+    except (ImportError, ModuleNotFoundError):
+        from io_utils import read_wav, read_lab, get_speech_groundtruth
+        from features import extract_ste_features
 
 
 def survey_training_data(
