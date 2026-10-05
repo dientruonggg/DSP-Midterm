@@ -40,23 +40,35 @@ from TT3.metrics import evaluate_vad_file, summarize_evaluation
 from TT3.visualization import plot_gaussian_distributions, plot_single_file_result
 
 
-def run_training_phase(training_dir: str, output_dir: str) -> Dict[str, Any]:
+def run_training_phase(
+    training_dir: str,
+    output_dir: str,
+    frame_size_ms: float = 25.0,
+    hop_size_ms: float = 10.0
+) -> Dict[str, Any]:
     """
     Thực hiện khảo sát dữ liệu huấn luyện và xác định ngưỡng phân biệt tối ưu dùng chung.
 
     Tham số đầu vào:
         training_dir (str): Thư mục chứa dữ liệu huấn luyện (TinHieuHuanLuyen).
         output_dir (str): Thư mục lưu trữ biểu đồ và báo cáo đầu ra.
+        frame_size_ms (float): Độ dài khung tính theo miligiây (25 ms).
+        hop_size_ms (float): Bước nhảy khung tính theo miligiây (10 ms).
 
     Giá trị trả lại:
         Dict[str, Any]: Từ điển chứa các tham số ước lượng và ngưỡng tối ưu tìm được.
     """
     print("=" * 80)
     print(" GIAI ĐOẠN 1: KHẢO SÁT DỮ LIỆU HUẤN LUYỆN VÀ XÁC ĐỊNH BỘ THAM SỐ TỐI ƯU (TT3)")
+    print(f" Cấu hình phân khung: Độ dài khung = {frame_size_ms:.1f} ms | Bước nhảy = {hop_size_ms:.1f} ms")
     print("=" * 80)
 
     # Khảo sát toàn bộ khung tín hiệu trên 4 file huấn luyện
-    silence_ste, speech_ste, per_file_stats = survey_training_data(training_dir)
+    silence_ste, speech_ste, per_file_stats = survey_training_data(
+        training_dir=training_dir,
+        frame_size_ms=frame_size_ms,
+        hop_size_ms=hop_size_ms
+    )
 
     print(f"\n[+] Tổng số khung khoảng lặng khảo sát: {len(silence_ste):,}")
     print(f"[+] Tổng số khung tiếng nói khảo sát   : {len(speech_ste):,}")
@@ -110,7 +122,9 @@ def run_training_phase(training_dir: str, output_dir: str) -> Dict[str, Any]:
 def run_testing_phase(
     test_dir: str,
     threshold: float,
-    output_dir: str
+    output_dir: str,
+    frame_size_ms: float = 25.0,
+    hop_size_ms: float = 10.0
 ) -> List[Dict[str, Any]]:
     """
     Thực hiện phân đoạn VAD trên 4 file kiểm thử với ngưỡng tối ưu tìm được,
@@ -120,12 +134,15 @@ def run_testing_phase(
         test_dir (str): Thư mục chứa dữ liệu kiểm thử (TinHieuKiemThu).
         threshold (float): Ngưỡng năng lượng Bayes tìm được ở giai đoạn huấn luyện.
         output_dir (str): Thư mục lưu các figure kết quả.
+        frame_size_ms (float): Độ dài khung (25 ms).
+        hop_size_ms (float): Bước nhảy khung (10 ms).
 
     Giá trị trả lại:
         List[Dict[str, Any]]: Danh sách kết quả đánh giá định lượng cho từng file.
     """
     print("\n" + "=" * 80)
     print(f" GIAI ĐOẠN 2: THỰC NGHIỆM TRÊN TÍN HIỆU KIỂM THỬ VỚI NGƯỠNG T_opt = {threshold:.6f}")
+    print(f" Cấu hình phân khung: Độ dài khung = {frame_size_ms:.1f} ms | Bước nhảy = {hop_size_ms:.1f} ms")
     print("=" * 80)
 
     # Lấy danh sách 4 file kiểm thử theo thứ tự tên file
@@ -150,7 +167,9 @@ def run_testing_phase(
         pred_start, pred_end, ste_norm, frame_times, _ = predict_vad(
             signal=signal,
             sample_rate=sample_rate,
-            threshold=threshold
+            threshold=threshold,
+            frame_size_ms=frame_size_ms,
+            hop_size_ms=hop_size_ms
         )
         pred_bounds = (pred_start, pred_end)
 

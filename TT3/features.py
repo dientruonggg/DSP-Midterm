@@ -13,7 +13,7 @@ from typing import Tuple
 def frame_signal(
     signal: np.ndarray,
     sample_rate: int,
-    frame_size_ms: float = 20.0,
+    frame_size_ms: float = 25.0,
     hop_size_ms: float = 10.0
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
@@ -22,7 +22,7 @@ def frame_signal(
     Tham số đầu vào:
         signal (np.ndarray): Mảng 1 chiều chứa các mẫu biên độ âm thanh.
         sample_rate (int): Tần số lấy mẫu (Hz).
-        frame_size_ms (float): Độ dài một khung tính bằng miligiây (mặc định: 20 ms).
+        frame_size_ms (float): Độ dài một khung tính bằng miligiây (mặc định: 25 ms).
         hop_size_ms (float): Bước nhảy giữa hai khung tính bằng miligiây (mặc định: 10 ms).
 
     Giá trị trả lại:
@@ -108,7 +108,7 @@ def normalize_ste(ste: np.ndarray) -> np.ndarray:
 def extract_ste_features(
     signal: np.ndarray,
     sample_rate: int,
-    frame_size_ms: float = 20.0,
+    frame_size_ms: float = 25.0,
     hop_size_ms: float = 10.0
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
@@ -117,7 +117,7 @@ def extract_ste_features(
     Tham số đầu vào:
         signal (np.ndarray): Mảng 1 chiều chứa tín hiệu âm thanh đầu vào.
         sample_rate (int): Tần số lấy mẫu (Hz).
-        frame_size_ms (float): Độ dài khung tính theo miligiây (20 ms).
+        frame_size_ms (float): Độ dài khung tính theo miligiây (25 ms).
         hop_size_ms (float): Bước nhảy khung tính theo miligiây (10 ms).
 
     Giá trị trả lại:
@@ -125,7 +125,7 @@ def extract_ste_features(
             - ste_norm (np.ndarray): Vector năng lượng ngắn hạn STE chuẩn hóa [0, 1].
             - frame_times (np.ndarray): Mốc thời gian trung tâm của từng khung (giây).
     """
-    # Bước 1: Chia tín hiệu thành các khung có độ chồng lấp 50% (20ms/10ms)
+    # Bước 1: Chia tín hiệu thành các khung có độ chồng lấp (khung 25ms, bước nhảy 10ms)
     frames, frame_times = frame_signal(
         signal=signal,
         sample_rate=sample_rate,

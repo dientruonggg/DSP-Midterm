@@ -189,12 +189,12 @@ print("Hàm read_lab và get_speech_groundtruth đã được định nghĩa.")"
     # CELL: FRAMING
     # =========================================================================
     cells.append(nbformat.v4.new_markdown_cell("""### 5. Tự cài đặt hàm phân khung tín hiệu (Signal Framing)
-Chia tín hiệu 1D thành các khung có độ dài 20 ms với bước nhảy 10 ms (chồng lấp 50%), tính toán mốc thời gian trung tâm của mỗi khung."""))
+Chia tín hiệu 1D thành các khung có độ dài 25 ms với bước nhảy 10 ms, tính toán mốc thời gian trung tâm của mỗi khung."""))
 
     cells.append(nbformat.v4.new_code_cell("""def frame_signal(
     signal: np.ndarray,
     sample_rate: int,
-    frame_size_ms: float = 20.0,
+    frame_size_ms: float = 25.0,
     hop_size_ms: float = 10.0
 ) -> Tuple[np.ndarray, np.ndarray]:
     \"\"\"
@@ -203,7 +203,7 @@ Chia tín hiệu 1D thành các khung có độ dài 20 ms với bước nhảy 
     Tham số:
         signal (np.ndarray): Mảng 1 chiều chứa các mẫu biên độ âm thanh.
         sample_rate (int): Tần số lấy mẫu (Hz).
-        frame_size_ms (float): Độ dài khung (20 ms).
+        frame_size_ms (float): Độ dài khung (25 ms).
         hop_size_ms (float): Bước nhảy khung (10 ms).
     Trả lại:
         Tuple[np.ndarray, np.ndarray]: Mảng các khung và vector mốc thời gian tâm khung (giây).
@@ -267,13 +267,13 @@ def normalize_ste(ste: np.ndarray) -> np.ndarray:
 def extract_ste_features(
     signal: np.ndarray,
     sample_rate: int,
-    frame_size_ms: float = 20.0,
+    frame_size_ms: float = 25.0,
     hop_size_ms: float = 10.0
 ) -> Tuple[np.ndarray, np.ndarray]:
     \"\"\"
     Quy trình tích hợp: Phân khung -> Tính STE -> Chuẩn hóa STE về [0, 1].
     \"\"\"
-    # Thực hiện phân khung tín hiệu
+    # Thực hiện phân khung tín hiệu (khung 25ms, hop 10ms)
     frames, frame_times = frame_signal(signal, sample_rate, frame_size_ms, hop_size_ms)
     # Tính năng lượng ngắn hạn thô và chuẩn hóa
     ste_raw = compute_ste(frames)
@@ -480,7 +480,7 @@ def remove_short_silences(
 def extract_speech_boundaries(
     frame_decisions: np.ndarray,
     hop_size_ms: float = 10.0,
-    frame_size_ms: float = 20.0
+    frame_size_ms: float = 25.0
 ) -> Tuple[float, float]:
     \"\"\"
     Trích xuất mốc thời gian bắt đầu T_start và kết thúc T_end của câu nói.
@@ -498,12 +498,27 @@ def extract_speech_boundaries(
     return t_start, t_end
 
 
-def predict_vad(signal: np.ndarray, sample_rate: int, threshold: float):
+def predict_vad(
+    signal: np.ndarray,
+    sample_rate: int,
+    threshold: float,
+    frame_size_ms: float = 25.0,
+    hop_size_ms: float = 10.0
+):
     \"\"\"Chu trình phân đoạn hoàn chỉnh từ tín hiệu thô đến mốc thời gian [T_start, T_end].\"\"\"
-    ste_norm, frame_times = extract_ste_features(signal, sample_rate)
+    ste_norm, frame_times = extract_ste_features(
+        signal=signal,
+        sample_rate=sample_rate,
+        frame_size_ms=frame_size_ms,
+        hop_size_ms=hop_size_ms
+    )
     raw_decisions = apply_threshold(ste_norm, threshold)
-    smoothed = remove_short_silences(raw_decisions)
-    t_start, t_end = extract_speech_boundaries(smoothed)
+    smoothed = remove_short_silences(raw_decisions, hop_size_ms=hop_size_ms)
+    t_start, t_end = extract_speech_boundaries(
+        smoothed,
+        hop_size_ms=hop_size_ms,
+        frame_size_ms=frame_size_ms
+    )
     return t_start, t_end, ste_norm, frame_times, smoothed
 
 print("Các hàm xử lý nhị phân và hậu xử lý đã được định nghĩa.")"""))
@@ -627,20 +642,20 @@ Mỗi figure bao gồm dạng sóng âm thanh và đặc trưng STE xếp chồn
     # =========================================================================
     cells.append(nbformat.v4.new_markdown_cell("""## SLIDE 8: BÌNH LUẬN KẾT QUẢ THỰC NGHIỆM VÀ KẾT LUẬN
 
-### 1. Đánh giá về độ chính xác phân đoạn
+### 1. Đánh giá về độ chính xác phân đoạn (Cấu hình khung 25 ms, bước nhảy 10 ms)
 - **Sai số tổng thể**: Thuật toán TT3 đạt mức sai số rất thấp trên toàn bộ tập kiểm thử:
-  - $\\text{MAE trung bình} = 11.25\\text{ ms}$ (chỉ xấp xỉ hơn 1 bước nhảy khung $H = 10\\text{ ms}$).
-  - $\\text{RMSE trung bình} = 14.87\\text{ ms}$.
-- **Hiệu quả phát hiện mốc đầu câu**: Cả 4 file kiểm thử đều xác định mốc bắt đầu cực kỳ chính xác ($\\Delta_{start} \\le 10\\text{ ms}$), trong đó `phone_F2` có $\\Delta_{start} = 0.0\\text{ ms}$ (trùng khớp hoàn hảo với nhãn chuyên gia Praat).
+  - $\\text{MAE trung bình} = 12.50\\text{ ms}$ (chỉ xấp xỉ hơn 1 bước nhảy khung $H = 10\\text{ ms}$).
+  - $\\text{RMSE trung bình} = 14.08\\text{ ms}$.
+- **Hiệu quả phát hiện mốc đầu câu**: Cả 4 file kiểm thử đều xác định mốc bắt đầu cực kỳ chính xác ($\\Delta_{start} = 10.0\\text{ ms}$, đúng bằng sai số lượng tử hóa 1 khung dịch chuyển).
 
 ### 2. Khảo sát ảnh hưởng của mức nhiễu nền (SNR) giữa môi trường Studio và Phone
 - **Môi trường Studio (`studio_F2`, `studio_M2`)**:
   - SNR rất cao, mức năng lượng khoảng lặng cực kỳ thấp (kỳ vọng huấn luyện $\\mu_{sil} \\approx 0.00003$).
-  - Thuật toán phân đoạn chính xác cao với MAE chỉ từ $5.0\\text{ ms}$ đến $10.0\\text{ ms}$.
+  - Thuật toán phân đoạn chính xác cao với MAE chỉ $7.5\\text{ ms}$ và RMSE $7.9\\text{ ms}$.
 - **Môi trường Điện thoại (`phone_F2`, `phone_M2`)**:
-  - SNR thấp hơn, có nhiễu nền môi trường thu âm và tiếng thở nhẹ (kỳ vọng khoảng lặng $\\mu_{sil} \\approx 0.0007$).
-  - Tuy nhiên, ngưỡng tối ưu Bayes $T_{opt} = 0.001900$ đã tự động thiết lập một khoảng cách an toàn (safety margin) cao gấp $\\approx 2.5$ lần so với mức nhiễu nền, giúp chống nhiễu hiệu quả mà không làm mất các đoạn âm vô thanh (`uv`) yếu ở đầu câu nói.
-  - Riêng ở đuôi câu `phone_F2`, có sự kéo dài âm đuôi (trailing breath / unvoiced release) khiến thuật toán kéo dài thêm $50\\text{ ms}$, tuy nhiên sai số này hoàn toàn chấp nhận được trong các hệ thống nhận dạng tiếng nói thực tế."""))
+  - SNR thấp hơn, có nhiễu nền môi trường thu âm và tiếng thở nhẹ (kỳ vọng khoảng lặng $\\mu_{sil} \\approx 0.0007$ - $0.0009$).
+  - Tuy nhiên, ngưỡng tối ưu Bayes $T_{opt} \\approx 0.002878$ đã tự động thiết lập một khoảng cách an toàn (safety margin) cao gấp $\\approx 3 - 4$ lần so với mức nhiễu nền, giúp chống nhiễu hiệu quả.
+  - Riêng ở đuôi câu `phone_F2`, sự kéo dài âm đuôi (trailing breath / unvoiced release) khiến thuật toán kéo dài thêm $45\\text{ ms}$, tuy nhiên sai số này hoàn toàn nằm trong dung sai cho phép của các hệ thống xử lý tiếng nói thực tế."""))
 
     nb.cells = cells
     return nb

@@ -19,7 +19,9 @@ from TT3.features import extract_ste_features
 
 
 def survey_training_data(
-    training_dir: str
+    training_dir: str,
+    frame_size_ms: float = 25.0,
+    hop_size_ms: float = 10.0
 ) -> Tuple[np.ndarray, np.ndarray, Dict[str, Dict[str, float]]]:
     """
     Khảo sát tất cả các khung tín hiệu trên các file huấn luyện (*.wav và *.lab tương ứng),
@@ -27,6 +29,8 @@ def survey_training_data(
 
     Tham số đầu vào:
         training_dir (str): Đường dẫn đến thư mục chứa các file huấn luyện (TinHieuHuanLuyen).
+        frame_size_ms (float): Độ dài khung (25 ms).
+        hop_size_ms (float): Bước nhảy khung (10 ms).
 
     Giá trị trả lại:
         Tuple[np.ndarray, np.ndarray, Dict[str, Dict[str, float]]]:
@@ -50,7 +54,12 @@ def survey_training_data(
 
         # Đọc tín hiệu âm thanh và nhãn phân đoạn chuẩn Praat
         signal, sample_rate = read_wav(wav_path)
-        ste_norm, frame_times = extract_ste_features(signal, sample_rate)
+        ste_norm, frame_times = extract_ste_features(
+            signal=signal,
+            sample_rate=sample_rate,
+            frame_size_ms=frame_size_ms,
+            hop_size_ms=hop_size_ms
+        )
         lab_segments = read_lab(lab_path)
         gt_start, gt_end = get_speech_groundtruth(lab_segments)
 
@@ -242,7 +251,7 @@ def remove_short_silences(
 def extract_speech_boundaries(
     frame_decisions: np.ndarray,
     hop_size_ms: float = 10.0,
-    frame_size_ms: float = 20.0
+    frame_size_ms: float = 25.0
 ) -> Tuple[float, float]:
     """
     Xác định mốc thời gian bắt đầu (T_start) và kết thúc (T_end) của câu nói từ chuỗi quyết định khung.
@@ -252,7 +261,7 @@ def extract_speech_boundaries(
     Tham số đầu vào:
         frame_decisions (np.ndarray): Mảng nhị phân quyết định đã qua xử lý hậu kỳ.
         hop_size_ms (float): Bước nhảy khung (10 ms).
-        frame_size_ms (float): Độ rộng khung (20 ms).
+        frame_size_ms (float): Độ rộng khung (25 ms).
 
     Giá trị trả lại:
         Tuple[float, float]: (T_start, T_end) tính bằng giây.
@@ -282,7 +291,9 @@ def extract_speech_boundaries(
 def predict_vad(
     signal: np.ndarray,
     sample_rate: int,
-    threshold: float
+    threshold: float,
+    frame_size_ms: float = 25.0,
+    hop_size_ms: float = 10.0
 ) -> Tuple[float, float, np.ndarray, np.ndarray, np.ndarray]:
     """
     Hàm thực thi phân đoạn tiếng nói / khoảng lặng hoàn chỉnh cho một file âm thanh.
@@ -291,6 +302,8 @@ def predict_vad(
         signal (np.ndarray): Mảng tín hiệu âm thanh đầu vào.
         sample_rate (int): Tần số lấy mẫu (Hz).
         threshold (float): Ngưỡng năng lượng STE phân loại.
+        frame_size_ms (float): Độ dài khung tính theo miligiây (25 ms).
+        hop_size_ms (float): Bước nhảy khung tính theo miligiây (10 ms).
 
     Giá trị trả lại:
         Tuple[float, float, np.ndarray, np.ndarray, np.ndarray]:
@@ -300,16 +313,25 @@ def predict_vad(
             - frame_times (np.ndarray): Mốc thời gian trung tâm của các khung.
             - smoothed_decisions (np.ndarray): Mảng nhị phân sau hậu xử lý 200ms.
     """
-    # Bước 1: Trích xuất đặc trưng STE chuẩn hóa và thời gian khung
-    ste_norm, frame_times = extract_ste_features(signal, sample_rate)
+    # Bước 1: Trích xuất đặc trưng STE chuẩn hóa và thời gian khung (khung 25ms, hop 10ms)
+    ste_norm, frame_times = extract_ste_features(
+        signal=signal,
+        sample_rate=sample_rate,
+        frame_size_ms=frame_size_ms,
+        hop_size_ms=hop_size_ms
+    )
 
     # Bước 2: So sánh năng lượng với ngưỡng Bayes T_opt
     raw_decisions = apply_threshold(ste_norm, threshold)
 
     # Bước 3: Hậu xử lý gộp các khoảng lặng ngắn dưới 200 ms
-    smoothed_decisions = remove_short_silences(raw_decisions)
+    smoothed_decisions = remove_short_silences(raw_decisions, hop_size_ms=hop_size_ms)
 
     # Bước 4: Trích xuất biên thời gian bắt đầu và kết thúc của câu nói
-    t_start, t_end = extract_speech_boundaries(smoothed_decisions)
+    t_start, t_end = extract_speech_boundaries(
+        smoothed_decisions,
+        hop_size_ms=hop_size_ms,
+        frame_size_ms=frame_size_ms
+    )
 
     return t_start, t_end, ste_norm, frame_times, smoothed_decisions
