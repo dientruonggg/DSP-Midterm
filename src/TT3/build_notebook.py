@@ -68,6 +68,7 @@ from typing import Tuple, List, Dict, Any
 
 import numpy as np
 import matplotlib.pyplot as plt
+from IPython.display import Audio, display
 
 # Cấu hình kích thước và kiểu hiển thị đồ thị chuẩn báo cáo học thuật
 plt.rcParams.update({
@@ -545,7 +546,22 @@ Mỗi figure bao gồm dạng sóng âm thanh và đặc trưng STE xếp chồn
     ax2.legend(loc="upper right")
 
     plt.tight_layout()
-    plt.show()"""))
+    plt.show()
+
+    # Nạp và hiển thị audio player cho file kiểm thử cục bộ
+    test_wav_path = TEST_DIR / fname
+    print(f"🎵 Audio gốc ({fname}):")
+    if test_wav_path.exists():
+        display(Audio(filename=str(test_wav_path)))
+    else:
+        display(Audio(data=sig, rate=sr))
+
+    # Hiển thị audio player cho phân đoạn tiếng nói nhận diện được
+    st_idx = int(pred[0] * sr)
+    en_idx = min(len(sig), int(pred[1] * sr))
+    if en_idx > st_idx:
+        print(f"🔊 Đoạn tiếng nói nhận diện TT3 [{pred[0]:.2f}s - {pred[1]:.2f}s]:")
+        display(Audio(data=sig[st_idx:en_idx], rate=sr))"""))
 
     # SLIDE 8: DISCUSSION & CONCLUSION
     cells.append(nbformat.v4.new_markdown_cell("""## SLIDE 8: BÌNH LUẬN KẾT QUẢ THỰC NGHIỆM VÀ KẾT LUẬN
@@ -612,6 +628,7 @@ from typing import Tuple, List, Dict, Any
 
 import numpy as np
 import matplotlib.pyplot as plt
+from IPython.display import Audio, display
 
 # Configure matplotlib formatting for academic presentation
 plt.rcParams.update({
@@ -1089,7 +1106,22 @@ Each figure displays the audio waveform and normalized STE curve, overlaid with 
     ax2.legend(loc="upper right")
 
     plt.tight_layout()
-    plt.show()"""))
+    plt.show()
+
+    # Load and display local audio player widget
+    test_wav_path = TEST_DIR / fname
+    print(f"🎵 Original Audio ({fname}):")
+    if test_wav_path.exists():
+        display(Audio(filename=str(test_wav_path)))
+    else:
+        display(Audio(data=sig, rate=sr))
+
+    # Display audio player for predicted speech segment
+    st_idx = int(pred[0] * sr)
+    en_idx = min(len(sig), int(pred[1] * sr))
+    if en_idx > st_idx:
+        print(f"🔊 Predicted Speech Segment TT3 [{pred[0]:.2f}s - {pred[1]:.2f}s]:")
+        display(Audio(data=sig[st_idx:en_idx], rate=sr))"""))
 
     # SLIDE 8: DISCUSSION & CONCLUSION
     cells.append(nbformat.v4.new_markdown_cell("""## SLIDE 8: EXPERIMENTAL DISCUSSION AND CONCLUSION
