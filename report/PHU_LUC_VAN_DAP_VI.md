@@ -12,10 +12,10 @@
 ---
 
 ## 🗺️ BẢN ĐỒ 5 SLIDE PHỤ LỤC TRÊN CANVA (SLIDES 18 - 22)
-1. **[Slide 18] Phụ lục 01: Tiền xử lý & Bộ tham số chuẩn (Framing, 200ms silence bridge, 50ms min speech)**
-2. **[Slide 19] Phụ lục 02: Kết quả trung gian TT1 (Tìm kiếm nhị phân, 40 bước lặp, T_opt = 0.00261)**
-3. **[Slide 20] Phụ lục 03: Kết quả trung gian TT2 (Histogram 100 bins, 5-bin MA, W=5, 4 file train)**
-4. **[Slide 21] Phụ lục 04: Kết quả trung gian TT3 (Mean/Std Sil & Sp, Giải pt Bayes, T_Bayes = 0.00202)**
+1. **[Slide 18] Phụ lục 01: Tiền xử lý & Bộ tham số chuẩn (Framing 25ms/10ms, 200ms silence bridge, 50ms min speech)**
+2. **[Slide 19] Phụ lục 02: Kết quả trung gian TT1 (Tìm kiếm nhị phân, 40 bước lặp, T_opt = 0.00348)**
+3. **[Slide 20] Phụ lục 03: Kết quả trung gian TT2 (Dual-Feature STE + SC, 100 bins, 5-bin MA, W=5, Tinh chỉnh đệm biên Train: 13.75ms -> 11.25ms)**
+4. **[Slide 21] Phụ lục 04: Kết quả trung gian TT3 (Mean/Std Sil & Sp, Giải pt Bayes, T_Bayes = 0.00288)**
 5. **[Slide 22] Phụ lục 05: Đối thoại phản biện & 8 câu hỏi bẫy vấn đáp kinh điển**
 
 ---
@@ -26,8 +26,8 @@
 | Tham số | Giá trị | Ý nghĩa vật lý trong DSP |
 |---|:---:|---|
 | **Tần số lấy mẫu ($F_s$)** | $16\text{ kHz}$ | Chuẩn âm thanh tiếng nói (băng rộng $0 - 8\text{ kHz}$). |
-| **Độ dài khung (`frame_ms`)** | $20.0\text{ ms}$ ($320$ samples) | Tiếng nói có tính tựa dừng (quasi-stationary) trong khoảng $10 - 30\text{ ms}$, cho phép tính các đặc trưng ngắn hạn. |
-| **Bước dịch khung (`hop_ms`)** | $10.0\text{ ms}$ ($160$ samples) | Độ phân giải thời gian của hệ thống. Chồng lấp $50\%$ giúp không bỏ sót sự thay đổi đột ngột giữa các khung. |
+| **Độ dài khung (`frame_ms`)** | $25.0\text{ ms}$ ($400$ samples) | Tiếng nói có tính tựa dừng (quasi-stationary) trong khoảng $20 - 30\text{ ms}$, cho phép tính các đặc trưng ngắn hạn chuẩn quốc tế. |
+| **Bước dịch khung (`hop_ms`)** | $10.0\text{ ms}$ ($160$ samples) | Độ phân giải thời gian của hệ thống. Chồng lấp $60\%$ giúp theo dõi trơn tru chuyển tiếp âm vị. |
 | **Khoảng lặng tối thiểu (`min_silence_ms`)** | $200.0\text{ ms}$ ($20$ hops) | Yêu cầu bắt buộc của đề bài. Dùng để nối các đoạn ngắt hơi giả/ngắn giữa các từ thành một khối tiếng nói liên tục. |
 | **Độ dài tiếng nói tối thiểu (`min_speech_ms`)** | $50.0\text{ ms}$ ($5$ hops) | Ngăn nhiễu xung (click, pop, gõ mic) bị nhận nhầm thành tiếng nói (âm vị người ngắn nhất $\ge 30-50\text{ ms}$). |
 
@@ -38,17 +38,31 @@
 
 | Thuật toán | Biến thể | MAE trung bình (ms) | RMSE trung bình (ms) | Frame F1-score | Unvoiced Recall (UV) |
 |---|---|:---:|:---:|:---:|:---:|
-| **TT1 (Nhị phân STE)** | Baseline (`1.ipynb`) | $8.75$ | $11.34$ | $0.993$ | $0.971$ |
-| **TT1 (Logistic đa đặc trưng)** | Mở rộng (`2.ipynb`) | **$6.25$** | **$7.80$** | **$0.996$** | $0.968$ |
-| **TT2 (Histogram 1D STE)** | Baseline (`1.ipynb`) | $17.50$ | $18.81$ | $0.977$ | $0.891$ |
-| **TT2 (Histogram 2D STE-ZCR)** | Mở rộng (`2.ipynb`) | $20.00$ | $21.56$ | $0.988$ | **$0.947$** |
-| **TT3 (Gaussian 1D STE)** | Baseline (`1.ipynb`) | $11.25$ | $14.87$ | $0.994$ | **$0.971$** |
-| **TT3 (Gaussian đa biến)** | Mở rộng (`2.ipynb`) | $15.00$ | $16.34$ | $0.978$ | $0.903$ |
+| **TT1 (Nhị phân STE)** | Chuẩn 25ms/10ms (`1-mine.ipynb`) | $10.00$ | $10.33$ | $0.993$ | $0.971$ |
+| **TT1 (DSP Classifier)** | Logistic đa đặc trưng (`2.ipynb`) | **$6.25$** | **$7.80$** | **$0.996$** | $0.968$ |
+| **TT2 (Dual STE + SC)** | Chuẩn tối ưu (+10ms Pad) (`1-mine.ipynb`) | $12.50$ | $13.37$ | $0.985$ | **$0.947$** |
+| **TT2 (Cơ sở STE thuần)** | Bản không đệm biên (No-Pad) | $18.75$ | $19.34$ | $0.977$ | $0.891$ |
+| **TT3 (Gaussian 1D STE)** | Chuẩn Bayes 25ms/10ms (`src/TT3/main.py`) | $12.50$ | $14.08$ | $0.994$ | $0.971$ |
+| **TT3 (Gaussian đa biến)** | Mở rộng 4 chiều (`2.ipynb`) | $15.00$ | $16.34$ | $0.978$ | $0.903$ |
 
-> **Nhận xét chuyên sâu:**
-> * **TT1-2 (Mở rộng)** là thuật toán định vị biên tốt nhất toàn diện: $\text{MAE} = 6.25\text{ ms}$.
-> * **TT2-2 (Histogram 2D)** cứu âm vô thanh xuất sắc nhất: $\text{UV Recall}$ tăng từ $89.1\%$ lên **$94.7\%$**, chấp nhận đánh đổi biên ngoài lệch nhẹ $1-2$ hop do bảo toàn vùng vô thanh biên giới.
-> * **TT3-1 (Gaussian 1D)** vượt trội hơn TT3-2 (Đa biến) vì tập train chỉ có 4 file, mô hình ít tham số hoạt động ổn định và khái quát hóa tốt hơn ma trận hiệp phương sai đầy đủ.
+> **Bảng số liệu chi tiết TT2 (Dual-Feature STE + Spectral Centroid) trên 4 file Test (trích `output/mine/intermediate_results.csv`):**
+> 
+> | File Test | $M_{1\_E}$ | $M_{2\_E}$ | **Ngưỡng $T_E$** | $M_{1\_C}$ | $M_{2\_C}$ | **Ngưỡng $T_C$** | Sau AND | Sau 200ms | Final (+10ms Pad) | Sai số MAE |
+> | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+> | `phone_F2.wav` | 0.0051 | 0.0751 | **0.0167** | 0.1655 | 0.2248 | **0.1754** | 212 frames | 269 frames | **271 frames** | 17.50 ms |
+> | `phone_M2.wav` | 0.0050 | 0.1750 | **0.0333** | 0.1860 | 0.2208 | **0.1918** | 117 frames | 172 frames | **174 frames** | 12.50 ms |
+> | `studio_F2.wav` | 0.0050 | 0.0650 | **0.0150** | 0.0050 | 0.0950 | **0.0200** | 134 frames | 157 frames | **159 frames** | 17.50 ms |
+> | `studio_M2.wav` | 0.0050 | 0.0750 | **0.0167** | 0.1518 | 0.2115 | **0.1618** | 120 frames | 144 frames | **146 frames** | **2.50 ms** |
+
+> **Bảng số liệu chi tiết TT3 (Gaussian 1D STE - Ngưỡng Bayes) trên 4 file Test (trích từ `src/TT3/main.py`):**
+> 
+> | File Test | Ground Truth (s) | Dự đoán TT3 (s) | $\Delta\text{Start}$ | $\Delta\text{End}$ | Sai số MAE | Sai số RMSE |
+> | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+> | `phone_F2.wav` | $[1.02, 4.04]$ | $[1.01, 4.08]$ | $-10\text{ ms}$ | $+45\text{ ms}$ | **27.50 ms** | 32.60 ms |
+> | `phone_M2.wav` | $[0.53, 2.52]$ | $[0.52, 2.52]$ | $-10\text{ ms}$ | $+5\text{ ms}$ | **7.50 ms** | 7.91 ms |
+> | `studio_F2.wav` | $[0.77, 2.37]$ | $[0.76, 2.37]$ | $-10\text{ ms}$ | $-5\text{ ms}$ | **7.50 ms** | 7.91 ms |
+> | `studio_M2.wav` | $[0.45, 1.93]$ | $[0.46, 1.94]$ | $+10\text{ ms}$ | $+5\text{ ms}$ | **7.50 ms** | 7.91 ms |
+> | **Trung bình** | — | — | — | — | **12.50 ms** | **14.08 ms** |
 
 ---
 
@@ -56,25 +70,30 @@
 *(Mở các file ảnh này từ thư mục dự phòng khi Thầy muốn xem chi tiết)*
 
 ### 1. Hình ảnh Giải pháp lõi & Huấn luyện (Train)
-* **TT3 - Đồ thị phân bố Gaussian:** [`gaussian_distribution_slide.png`](file:///home/bim/Projects/DSP_MidTerm/src/TT3/output/1/gaussian_distribution_slide.png)
-  * $\mu_{sil} = 0.00033$, $\sigma_{sil} = 0.00047$ (Khoảng lặng).
-  * $\mu_{sp} = 0.19652$, $\sigma_{sp} = 0.23327$ (Tiếng nói).
-  * Ngưỡng giao thoa tối ưu: $T = 0.00202$.
-* **TT2 - Đồ thị Histogram 1D (Giannakopoulos):** Hai mode $M_1$ (silence) và $M_2$ (speech), làm trơn bằng Moving Average $5$ điểm, tính ngưỡng với $W = 5$: $T = \frac{5 M_1 + M_2}{6}$.
+* **TT1 - Hội tụ chia đôi 40 epochs:** [`output_plots/intermediate_tt1_binary_search.png`](file:///home/bim/Projects/DSP_MidTerm/output_plots/intermediate_tt1_binary_search.png)
+  * Hội tụ về ngưỡng toàn cục tối ưu $T_{\text{opt}} = 0.003478 \approx 0.00348$.
+  * Sai số thời lượng có dấu $\Delta D(T) \to 0.00\text{ ms}$. MAE trên tập train đạt $11.25\text{ ms}$.
+* **TT2 - Khảo sát đệm biên (Boundary-Padding Sweep):** [`figures/tt2_padding_effect.png`](file:///home/bim/Projects/DSP_MidTerm/figures/tt2_padding_effect.png)
+  * Khảo sát đệm biên $0 - 40\text{ ms}$ ($0 - 4$ khung). Đệm $10\text{ ms}$ ($1$ khung) giúp MAE train giảm từ $13.75\text{ ms} \to 11.25\text{ ms}$ (giảm $-18.2\%$).
+  * Phục hồi các chu kỳ đầu của âm vô thanh bị ngưỡng năng lượng cắt sớm.
+* **TT3 - Đồ thị phân bố Gaussian:** [`figures/tt3_train_gaussian.png`](file:///home/bim/Projects/DSP_MidTerm/figures/tt3_train_gaussian.png)
+  * $\mu_{\text{sil}} = 0.000387 \approx 0.00039$, $\sigma_{\text{sil}} = 0.000709 \approx 0.00071$ (Khoảng lặng).
+  * $\mu_{\text{sp}} = 0.202649 \approx 0.20265$, $\sigma_{\text{sp}} = 0.235626 \approx 0.23563$ (Tiếng nói).
+  * Ngưỡng Bayes tối ưu (giao thoa đẳng xác suất): $T_{\text{opt}} = 0.002878 \approx 0.00288$.
 
 ### 2. Hình ảnh Composite tổng hợp 4 file kiểm thử (Test)
-* **TT1 Composite:** [`output_plots/composite_4files_tt1.png`](file:///home/bim/Projects/DSP_MidTerm/output_plots/composite_4files_tt1.png)
-* **TT2 Composite:** [`output_plots/composite_4files_tt2.png`](file:///home/bim/Projects/DSP_MidTerm/output_plots/composite_4files_tt2.png)
-* **TT3 Composite:** [`output_plots/composite_4files_tt3.png`](file:///home/bim/Projects/DSP_MidTerm/output_plots/composite_4files_tt3.png)
-* **Đồ thị so sánh Benchmark:** [`output_plots/benchmark_comparison_plot.png`](file:///home/bim/Projects/DSP_MidTerm/output_plots/benchmark_comparison_plot.png)
+* **TT1 Composite (Waveform + STE):** [`figures/tt1_composite.png`](file:///home/bim/Projects/DSP_MidTerm/figures/tt1_composite.png)
+* **TT2 Composite (Waveform + STE + Spectral Centroid + Histograms):** [`figures/tt2_composite.png`](file:///home/bim/Projects/DSP_MidTerm/figures/tt2_composite.png)
+* **TT3 Composite (Waveform + STE + Gaussian Posterior):** [`figures/tt3_composite.png`](file:///home/bim/Projects/DSP_MidTerm/figures/tt3_composite.png)
+* **Đồ thị so sánh Benchmark:** [`figures/benchmark_plot.png`](file:///home/bim/Projects/DSP_MidTerm/figures/benchmark_plot.png)
 
 ### 3. Phân tích hiện tượng đặc biệt ở từng file test
-* **`phone_M2` ($\text{MAE} = 0.0\text{ ms}$ ở TT1):**
-  * Ground truth: $[0.53\text{ s}, 2.52\text{ s}]$. Cả hai mốc đều là bội số nguyên của hop $10\text{ ms}$ (frame 53 và frame 252). Thuật toán bắt trúng mốc nên sai số tuyệt đối bằng 0.
-* **`phone_F2` ($\text{MAE} = 20 - 30\text{ ms}$):**
-  * Năng lượng cuối câu giảm từ từ kèm tiếng thở nhẹ tiệm cận mức nhiễu của micro điện thoại (`phone`). Biên kết thúc bị trễ $3-4$ frame ($30-40\text{ ms}$) là giới hạn vật lý của phương pháp dựa trên năng lượng thuần túy.
-* **`studio_F2` & `studio_M2` ($\text{MAE} = 5 - 10\text{ ms}$):**
-  * Tỷ số tín hiệu trên nhiễu (SNR) cao, nền tĩnh lặng, biên độ bật/tắt tiếng nói dứt khoát nên độ chính xác đạt mức gần như tuyệt đối (chỉ lệch tối đa $1$ hop).
+* **`studio_M2` ($\text{MAE} = 2.5\text{ ms}$ ở TT2, $7.5\text{ ms}$ ở TT1):**
+  * Nền Studio cực sạch, chuyển tiếp tiếng nói dứt khoát. Sau khi bù $+10\text{ ms}$ đệm biên, sai số bắt đầu là $0.0\text{ ms}$ và sai số kết thúc chỉ lệch $-5.0\text{ ms}$ (nửa hop $10\text{ ms}$), cho MAE xuất sắc $2.5\text{ ms}$.
+* **`phone_M2` ($\text{MAE} = 7.5\text{ ms}$ ở TT1, $12.5\text{ ms}$ ở TT2):**
+  * Ground truth: $[0.53\text{ s}, 2.52\text{ s}]$. Cả hai mốc đều là bội số nguyên của hop $10\text{ ms}$ (frame 53 và frame 252).
+* **`phone_F2` & `studio_F2` ($\text{MAE} = 12.5 - 17.5\text{ ms}$):**
+  * Âm sắc nữ có tần số cơ bản cao, năng lượng rải rộng. Âm đuôi có hơi thở nhẹ tiệm cận mức nhiễu của micro khiến biên kết thúc có độ trễ nhẹ $1-2$ khung. Đây là giới hạn tự nhiên của phương pháp năng lượng.
 
 ---
 
