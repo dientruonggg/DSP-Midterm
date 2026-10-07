@@ -4,3 +4,14 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .ask
+.vscode/
+*.log
+*.synctex.gz
+*.aux
+*.nav
+*.snm
+*.toc
+*.out
+preview_*.png
+previews/
+
