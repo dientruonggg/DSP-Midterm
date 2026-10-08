@@ -160,48 +160,64 @@ def main():
     # 1. GENERATE INTERMEDIATE TRAINING GAUSSIAN FIGURE
     # -------------------------------------------------------------
     print("[*] Generating Intermediate Gaussian Bayes Figure...")
-    grid = np.linspace(0, 0.55, 10000)
+    grid = np.linspace(-0.002, 0.6, 5000)
     pdf_sil = (1.0 / (sig_sil * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((grid - mu_sil) / sig_sil) ** 2)
     pdf_sp = (1.0 / (sig_sp * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((grid - mu_sp) / sig_sp) ** 2)
 
+    # Log10 scale so BOTH distributions visible (silence peak ~560 vs speech ~1.7)
+    log_sil = np.log10(np.maximum(pdf_sil, 1e-8))
+    log_sp = np.log10(np.maximum(pdf_sp, 1e-8))
+
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6), dpi=200)
 
-    # Panel A: Linear scale PDF zoomed around transition
-    ax1.hist(silence_stes, bins=150, range=(0, 0.05), density=True, color="#93c5fd", alpha=0.45, label="Empirical Silence Frames")
-    ax1.hist(speech_stes, bins=150, range=(0, 0.05), density=True, color="#fdba74", alpha=0.45, label="Empirical Speech Frames")
-    ax1.plot(grid, pdf_sil, color="#1f77b4", linewidth=2.5, label=f"Silence N(μ={mu_sil:.5f}, σ={sig_sil:.5f})")
-    ax1.plot(grid, pdf_sp, color="#d62728", linewidth=2.5, label=f"Speech N(μ={mu_sp:.4f}, σ={sig_sp:.4f})")
-    ax1.axvline(t_opt, color="#2ca02c", linestyle="--", linewidth=2.4, label=f"Bayes Threshold T = {t_opt:.5f}\n[Equal Likelihood Root]")
-    ax1.fill_between(grid[grid <= t_opt], pdf_sil[grid <= t_opt], color="#1f77b4", alpha=0.12)
-    ax1.fill_between(grid[grid > t_opt], pdf_sp[grid > t_opt], color="#d62728", alpha=0.12)
+    # --- PANEL A: Full range log scale ---
+    ax1.plot(grid, log_sil, color="#1f77b4", linewidth=2.5,
+             label=f"Silence N(μ={mu_sil:.5f}, σ={sig_sil:.5f})")
+    ax1.plot(grid, log_sp, color="#d62728", linewidth=2.5,
+             label=f"Speech N(μ={mu_sp:.4f}, σ={sig_sp:.4f})")
+    ax1.axvline(t_opt, color="#2ca02c", linestyle="--", linewidth=2.4,
+                label=f"Bayes T = {t_opt:.5f}")
+    # Mark intersection
+    idx_t = np.argmin(np.abs(grid - t_opt))
+    y_cross = log_sp[idx_t]
+    ax1.plot(t_opt, y_cross, "o", color="#DC2626", markersize=10, zorder=5)
+    ax1.annotate(f"Equal Likelihood\nT = {t_opt:.5f}",
+                 xy=(t_opt, y_cross), xytext=(0.08, y_cross + 0.8),
+                 arrowprops=dict(arrowstyle="->", color="#DC2626", lw=1.8),
+                 fontsize=10, fontweight="bold", color="#DC2626",
+                 bbox=dict(boxstyle="round,pad=0.3", facecolor="white", edgecolor="#DC2626", alpha=0.9))
+    ax1.fill_betweenx([-8, 4], 0, t_opt, color="#1f77b4", alpha=0.06)
+    ax1.fill_betweenx([-8, 4], t_opt, 0.5, color="#d62728", alpha=0.06)
+    ax1.text(0.001, -6.5, "SILENCE", fontsize=10, fontweight="bold", color="#1f77b4", ha="center")
+    ax1.text(0.25, -6.5, "SPEECH", fontsize=10, fontweight="bold", color="#d62728", ha="center")
 
-    ax1.set_title("A. Linear Scale Probability Density Functions (PDF)", fontsize=12, fontweight="bold", pad=12)
+    ax1.set_title("A. Log₁₀ Probability Density (Full Range)", fontsize=12, fontweight="bold", pad=12)
     ax1.set_xlabel("Normalized STE", fontsize=11)
-    ax1.set_ylabel("Probability Density", fontsize=11)
-    ax1.set_xlim(0, 0.015)
+    ax1.set_ylabel("Log₁₀ Density", fontsize=11)
+    ax1.set_xlim(-0.002, 0.5)
+    ax1.set_ylim(-7.5, 3.5)
     ax1.grid(True, alpha=0.4)
     ax1.legend(loc="upper right", fontsize=9, framealpha=0.9, edgecolor="#cccccc")
 
-    # Panel B: Log-likelihood scale (Full dynamic range)
-    log_sil = np.log10(np.maximum(pdf_sil, 1e-6))
-    log_sp = np.log10(np.maximum(pdf_sp, 1e-6))
-    ax2.plot(grid, log_sil, color="#1f77b4", linewidth=2.5, label="Log10 Silence PDF")
-    ax2.plot(grid, log_sp, color="#d62728", linewidth=2.5, label="Log10 Speech PDF")
-    ax2.axvline(t_opt, color="#2ca02c", linestyle="--", linewidth=2.4, label=f"Bayes Boundary (T = {t_opt:.5f})")
+    # --- PANEL B: Zoom transition zone ---
+    ax2.plot(grid, log_sil, color="#1f77b4", linewidth=2.6, label="Silence PDF")
+    ax2.plot(grid, log_sp, color="#d62728", linewidth=2.6, label="Speech PDF")
+    ax2.axvline(t_opt, color="#2ca02c", linestyle="--", linewidth=2.4)
+    ax2.plot(t_opt, y_cross, "o", color="#DC2626", markersize=12, zorder=5,
+             label=f"Intersection T = {t_opt:.5f}")
+    ax2.annotate(f"p(x|Sil) = p(x|Sp)\nT = {t_opt:.5f}",
+                 xy=(t_opt, y_cross), xytext=(t_opt + 0.006, y_cross + 1.2),
+                 arrowprops=dict(arrowstyle="->", color="#DC2626", lw=2.0),
+                 fontsize=10.5, fontweight="bold", color="#DC2626",
+                 bbox=dict(boxstyle="round,pad=0.3", facecolor="#FEF2F2", edgecolor="#DC2626", alpha=0.95))
+    ax2.axvspan(0, t_opt, color="#1f77b4", alpha=0.10, label="→ Classify Silence")
+    ax2.axvspan(t_opt, 0.02, color="#d62728", alpha=0.10, label="→ Classify Speech")
 
-    # Find log y at t_opt
-    idx_opt = np.argmin(np.abs(grid - t_opt))
-    y_val = log_sp[idx_opt]
-    ax2.annotate(f"Optimal Decision\nT = {t_opt:.5f}",
-                 xy=(t_opt, y_val),
-                 xytext=(t_opt + 0.08, y_val + 1.2),
-                 arrowprops=dict(facecolor="#2ca02c", shrink=0.08, width=1.5, headwidth=7),
-                 fontsize=10, fontweight="bold", color="#15803d")
-
-    ax2.set_title("B. Log-Likelihood Scale (Full Dynamic Range 0 to 0.5)", fontsize=12, fontweight="bold", pad=12)
+    ax2.set_title("B. Zoom: Decision Boundary Zone", fontsize=12, fontweight="bold", pad=12)
     ax2.set_xlabel("Normalized STE", fontsize=11)
-    ax2.set_ylabel("Log10 Likelihood", fontsize=11)
-    ax2.set_xlim(0, 0.5)
+    ax2.set_ylabel("Log₁₀ Density", fontsize=11)
+    ax2.set_xlim(-0.001, 0.02)
+    ax2.set_ylim(-3, 3.5)
     ax2.grid(True, alpha=0.4)
     ax2.legend(loc="upper right", fontsize=9, framealpha=0.9, edgecolor="#cccccc")
 
@@ -211,6 +227,7 @@ def main():
 
     fig1_path = FIGURES_DIR / "tt3_train_gaussian.png"
     fig.savefig(fig1_path, dpi=200, bbox_inches="tight")
+    fig.savefig(fig1_path.with_suffix(".pdf"), bbox_inches="tight")
     fig.savefig(OUTPUT_PLOTS_DIR / "intermediate_tt3_gaussian_bayes.png", dpi=200, bbox_inches="tight")
     plt.close()
     print(f"[+] Saved: {fig1_path}")

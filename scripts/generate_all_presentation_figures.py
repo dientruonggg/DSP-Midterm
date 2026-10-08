@@ -116,6 +116,14 @@ def save_fig_both(fig, base_path):
     png_path = base_path.with_suffix(".png")
     fig.savefig(pdf_path, bbox_inches="tight", pad_inches=0.03)
     fig.savefig(png_path, dpi=300, bbox_inches="tight", pad_inches=0.03)
+
+    # Sync composite figures to output_plots directory
+    stem = base_path.stem
+    if stem in ("tt1_composite", "tt2_composite", "tt3_composite"):
+        out_name = f"composite_4files_{stem[:3]}.png"
+        fig.savefig(OUTPUT_PLOTS_DIR / out_name, dpi=300, bbox_inches="tight", pad_inches=0.03)
+        print(f"Synced to output_plots: {out_name}")
+
     plt.close(fig)
     print(f"Saved: {pdf_path.name} & {png_path.name}")
 
@@ -255,10 +263,10 @@ def generate_composite_figures():
 
     # --- TT1 COMPOSITE ---
     T_TT1 = 0.003478
-    fig, axes = plt.subplots(2, 2, figsize=(12.0, 6.2))
-    fig.subplots_adjust(hspace=0.32, wspace=0.18, left=0.06, right=0.985, top=0.91, bottom=0.08)
+    fig, axes = plt.subplots(2, 2, figsize=(13.0, 7.2))
+    fig.subplots_adjust(hspace=0.46, wspace=0.18, left=0.065, right=0.985, top=0.855, bottom=0.08)
     fig.suptitle("TT1 TEST EXECUTION: Energy Bisection Boundary Detection Across 4 Test Signals\n(Mean MAE = 10.00 ms, Mean RMSE = 10.33 ms)",
-                 fontsize=12.5, fontweight="bold", color="#0F172A", y=0.985)
+                 fontsize=12.0, fontweight="bold", color="#0F172A", y=0.965)
 
     for idx, (wname, lname, stem) in enumerate(test_files):
         ax = axes[idx // 2, idx % 2]
@@ -286,15 +294,15 @@ def generate_composite_figures():
         ax.axvline(p_e, color="#2563EB", linestyle="--", linewidth=1.8)
         ax.axvspan(p_s, p_e, color="#38BDF8", alpha=0.18)
 
-        ax.set_title(f"{stem}  |  MAE = {mae:.1f} ms  ·  RMSE = {rmse:.1f} ms\nΔStart = {d_s:+.1f} ms  ·  ΔEnd = {d_e:+.1f} ms",
-                     fontsize=10.5, fontweight="bold", pad=4)
+        ax.set_title(f"{stem}  |  MAE = {mae:.1f} ms · RMSE = {rmse:.1f} ms  |  ΔStart = {d_s:+.1f} ms · ΔEnd = {d_e:+.1f} ms",
+                     fontsize=9.4, fontweight="bold", pad=8)
         ax.set_ylabel("Amplitude / STE", fontsize=9.0, fontweight="bold")
         ax.set_xlabel("Time (s)", fontsize=9.5)
-        ax.set_ylim(-1.05, 1.05)
+        ax.set_ylim(-1.05, 1.25)
         ax.set_xlim(0, dur)
         ax.grid(True)
         if idx == 0:
-            ax.legend(loc="upper right", fontsize=8.0, framealpha=0.92, ncol=3)
+            ax.legend(loc="upper right", fontsize=7.5, framealpha=0.92, ncol=3, handlelength=1.4, columnspacing=0.8)
 
     save_fig_both(fig, FIGURES_DIR / "tt1_composite")
 
@@ -305,10 +313,10 @@ def generate_composite_figures():
         "studio_F2": (0.750, 2.355, -20.0, -15.0, 17.50, 17.68, 0.0150, 0.0200),
         "studio_M2": (0.450, 1.925, 0.0, -5.0, 2.50, 3.54, 0.0183, 0.0250),
     }
-    fig, axes = plt.subplots(2, 2, figsize=(12.0, 6.2))
-    fig.subplots_adjust(hspace=0.32, wspace=0.18, left=0.06, right=0.985, top=0.91, bottom=0.08)
+    fig, axes = plt.subplots(2, 2, figsize=(13.0, 7.2))
+    fig.subplots_adjust(hspace=0.46, wspace=0.18, left=0.065, right=0.985, top=0.855, bottom=0.08)
     fig.suptitle("TT2 TEST EXECUTION: Dual-Feature Adaptive Histogram Boundary Detection\n(Mean MAE = 12.50 ms, Mean RMSE = 13.37 ms)",
-                 fontsize=12.5, fontweight="bold", color="#0F172A", y=0.985)
+                 fontsize=12.0, fontweight="bold", color="#0F172A", y=0.965)
 
     for idx, (wname, lname, stem) in enumerate(test_files):
         ax = axes[idx // 2, idx % 2]
@@ -331,24 +339,24 @@ def generate_composite_figures():
         ax.axvline(p_e, color="#D97706", linestyle="--", linewidth=1.8)
         ax.axvspan(p_s, p_e, color="#F59E0B", alpha=0.18)
 
-        ax.set_title(f"{stem}  |  MAE = {mae:.1f} ms  ·  RMSE = {rmse:.1f} ms\nΔStart = {d_s:+.1f} ms  ·  ΔEnd = {d_e:+.1f} ms",
-                     fontsize=10.5, fontweight="bold", pad=4)
+        ax.set_title(f"{stem}  |  MAE = {mae:.1f} ms · RMSE = {rmse:.1f} ms  |  ΔStart = {d_s:+.1f} ms · ΔEnd = {d_e:+.1f} ms",
+                     fontsize=9.4, fontweight="bold", pad=8)
         ax.set_ylabel("Amplitude / Feats", fontsize=9.0, fontweight="bold")
         ax.set_xlabel("Time (s)", fontsize=9.5)
-        ax.set_ylim(-1.05, 1.05)
+        ax.set_ylim(-1.05, 1.25)
         ax.set_xlim(0, dur)
         ax.grid(True)
         if idx == 0:
-            ax.legend(loc="upper right", fontsize=7.8, framealpha=0.92, ncol=3)
+            ax.legend(loc="upper right", fontsize=7.5, framealpha=0.92, ncol=3, handlelength=1.4, columnspacing=0.8)
 
     save_fig_both(fig, FIGURES_DIR / "tt2_composite")
 
     # --- TT3 COMPOSITE ---
     T_TT3 = 0.00288
-    fig, axes = plt.subplots(2, 2, figsize=(12.0, 6.2))
-    fig.subplots_adjust(hspace=0.32, wspace=0.18, left=0.06, right=0.985, top=0.91, bottom=0.08)
+    fig, axes = plt.subplots(2, 2, figsize=(13.0, 7.2))
+    fig.subplots_adjust(hspace=0.46, wspace=0.18, left=0.065, right=0.985, top=0.855, bottom=0.08)
     fig.suptitle("TT3 TEST EXECUTION: Gaussian Bayes Boundary Detection Across 4 Test Signals\n(Mean MAE = 12.50 ms, Mean RMSE = 14.08 ms)",
-                 fontsize=12.5, fontweight="bold", color="#0F172A", y=0.985)
+                 fontsize=12.0, fontweight="bold", color="#0F172A", y=0.965)
 
     for idx, (wname, lname, stem) in enumerate(test_files):
         ax = axes[idx // 2, idx % 2]
@@ -376,15 +384,15 @@ def generate_composite_figures():
         ax.axvline(p_e, color="#047857", linestyle="--", linewidth=1.8)
         ax.axvspan(p_s, p_e, color="#10B981", alpha=0.18)
 
-        ax.set_title(f"{stem}  |  MAE = {mae:.1f} ms  ·  RMSE = {rmse:.1f} ms\nΔStart = {d_s:+.1f} ms  ·  ΔEnd = {d_e:+.1f} ms",
-                     fontsize=10.5, fontweight="bold", pad=4)
+        ax.set_title(f"{stem}  |  MAE = {mae:.1f} ms · RMSE = {rmse:.1f} ms  |  ΔStart = {d_s:+.1f} ms · ΔEnd = {d_e:+.1f} ms",
+                     fontsize=9.4, fontweight="bold", pad=8)
         ax.set_ylabel("Amplitude / STE", fontsize=9.0, fontweight="bold")
         ax.set_xlabel("Time (s)", fontsize=9.5)
-        ax.set_ylim(-1.05, 1.05)
+        ax.set_ylim(-1.05, 1.25)
         ax.set_xlim(0, dur)
         ax.grid(True)
         if idx == 0:
-            ax.legend(loc="upper right", fontsize=8.0, framealpha=0.92, ncol=3)
+            ax.legend(loc="upper right", fontsize=7.5, framealpha=0.92, ncol=3, handlelength=1.4, columnspacing=0.8)
 
     save_fig_both(fig, FIGURES_DIR / "tt3_composite")
 
@@ -452,27 +460,77 @@ def generate_intermediate_figures():
     ax.legend(loc="upper left", fontsize=9.5)
     save_fig_both(fig, FIGURES_DIR / "tt2_padding_effect")
 
-    # --- TT3 GAUSSIAN PDF FIT ---
-    x = np.linspace(-0.005, 0.6, 2000)
+    # --- TT3 GAUSSIAN PDF FIT (REDESIGNED) ---
+    x = np.linspace(-0.002, 0.6, 5000)
     mu_sil, sig_sil = 0.00039, 0.00071
     mu_sp, sig_sp = 0.20265, 0.23563
+    t_bayes = 0.00288
     p_sil = (1.0 / (sig_sil * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mu_sil) / sig_sil) ** 2)
     p_sp = (1.0 / (sig_sp * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mu_sp) / sig_sp) ** 2)
 
-    fig, ax = plt.subplots(figsize=(8.0, 4.2))
-    fig.subplots_adjust(left=0.10, right=0.95, top=0.88, bottom=0.14)
-    # Log scale y to view both distributions clearly
-    ax.plot(x, p_sil, color="#0284C7", linewidth=2.2, label=f"Silence Gaussian (μ={mu_sil:.5f}, σ={sig_sil:.5f})")
-    ax.plot(x, p_sp, color="#D97706", linewidth=2.2, label=f"Speech Gaussian (μ={mu_sp:.4f}, σ={sig_sp:.4f})")
-    ax.axvline(0.00288, color="#DC2626", linestyle="--", linewidth=2.0, label="Bayes Equi-probability Root T = 0.00288")
-    ax.set_yscale("log")
-    ax.set_ylim(1e-4, 1e3)
-    ax.set_xlim(-0.002, 0.5)
-    ax.set_title("TT3 Parametric Gaussian Fit & Bayes Intersection (Log Density)", fontsize=12.0, fontweight="bold", pad=8)
-    ax.set_xlabel("Short-Time Energy (STE)", fontsize=10.5, fontweight="bold")
-    ax.set_ylabel("Probability Density (Log)", fontsize=10.5, fontweight="bold")
-    ax.grid(True, which="both", alpha=0.4)
-    ax.legend(loc="upper right", fontsize=9.0)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.0, 4.4))
+    fig.subplots_adjust(wspace=0.30, left=0.07, right=0.97, top=0.85, bottom=0.14)
+    fig.suptitle("TT3 Parametric Gaussian Fit & Bayes Decision Boundary",
+                 fontsize=12.5, fontweight="bold", color="#0F172A", y=0.97)
+
+    # PANEL A: Log scale — shows BOTH distributions clearly + intersection
+    log_sil = np.log10(np.maximum(p_sil, 1e-8))
+    log_sp = np.log10(np.maximum(p_sp, 1e-8))
+    ax1.plot(x, log_sil, color="#0284C7", linewidth=2.4,
+             label=f"Silence N(μ={mu_sil:.5f}, σ={sig_sil:.5f})")
+    ax1.plot(x, log_sp, color="#D97706", linewidth=2.4,
+             label=f"Speech N(μ={mu_sp:.4f}, σ={sig_sp:.4f})")
+    ax1.axvline(t_bayes, color="#DC2626", linestyle="--", linewidth=2.2,
+                label=f"Bayes Root T = {t_bayes:.5f}")
+    # Mark intersection point
+    idx_t = np.argmin(np.abs(x - t_bayes))
+    y_cross = log_sp[idx_t]
+    ax1.plot(t_bayes, y_cross, "o", color="#DC2626", markersize=10, zorder=5)
+    ax1.annotate(f"Equal Likelihood\nT = {t_bayes:.5f}",
+                 xy=(t_bayes, y_cross),
+                 xytext=(0.08, y_cross + 0.8),
+                 arrowprops=dict(arrowstyle="->", color="#DC2626", lw=1.8),
+                 fontsize=9.5, fontweight="bold", color="#DC2626",
+                 bbox=dict(boxstyle="round,pad=0.3", facecolor="white", edgecolor="#DC2626", alpha=0.9))
+    # Shade decision regions
+    ax1.fill_betweenx([-8, 4], 0, t_bayes, color="#0284C7", alpha=0.06)
+    ax1.fill_betweenx([-8, 4], t_bayes, 0.5, color="#D97706", alpha=0.06)
+    ax1.text(0.001, -6.5, "SILENCE", fontsize=9, fontweight="bold", color="#0284C7", ha="center")
+    ax1.text(0.25, -6.5, "SPEECH", fontsize=9, fontweight="bold", color="#D97706", ha="center")
+
+    ax1.set_title("A. Log₁₀ Probability Density (Full Range)", fontsize=10.5, fontweight="bold", pad=6)
+    ax1.set_xlabel("Normalized STE", fontsize=10.5, fontweight="bold")
+    ax1.set_ylabel("Log₁₀ Density", fontsize=10.5, fontweight="bold")
+    ax1.set_xlim(-0.002, 0.5)
+    ax1.set_ylim(-7.5, 3.5)
+    ax1.grid(True, alpha=0.4)
+    ax1.legend(loc="upper right", fontsize=7.8, framealpha=0.92)
+
+    # PANEL B: Zoom into transition zone (log scale) — crystal clear intersection
+    ax2.plot(x, log_sil, color="#0284C7", linewidth=2.6, label="Silence PDF")
+    ax2.plot(x, log_sp, color="#D97706", linewidth=2.6, label="Speech PDF")
+    ax2.axvline(t_bayes, color="#DC2626", linestyle="--", linewidth=2.4)
+    ax2.plot(t_bayes, y_cross, "o", color="#DC2626", markersize=12, zorder=5,
+             label=f"Intersection T = {t_bayes:.5f}")
+    # Annotate with values
+    ax2.annotate(f"p(x|Sil) = p(x|Sp)\nT = {t_bayes:.5f}",
+                 xy=(t_bayes, y_cross),
+                 xytext=(t_bayes + 0.006, y_cross + 1.2),
+                 arrowprops=dict(arrowstyle="->", color="#DC2626", lw=2.0),
+                 fontsize=10, fontweight="bold", color="#DC2626",
+                 bbox=dict(boxstyle="round,pad=0.3", facecolor="#FEF2F2", edgecolor="#DC2626", alpha=0.95))
+    # Shade crossing zone
+    ax2.axvspan(0, t_bayes, color="#0284C7", alpha=0.10, label="→ Classify Silence")
+    ax2.axvspan(t_bayes, 0.02, color="#D97706", alpha=0.10, label="→ Classify Speech")
+
+    ax2.set_title("B. Zoom: Transition Zone (Decision Boundary)", fontsize=10.5, fontweight="bold", pad=6)
+    ax2.set_xlabel("Normalized STE", fontsize=10.5, fontweight="bold")
+    ax2.set_ylabel("Log₁₀ Density", fontsize=10.5, fontweight="bold")
+    ax2.set_xlim(-0.001, 0.02)
+    ax2.set_ylim(-3, 3.5)
+    ax2.grid(True, alpha=0.4)
+    ax2.legend(loc="upper right", fontsize=7.8, framealpha=0.92)
+
     save_fig_both(fig, FIGURES_DIR / "tt3_train_gaussian")
 
 # ==============================================================================

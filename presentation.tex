@@ -123,6 +123,16 @@
     arc=2.5mm,
     boxrule=1pt,
     left=2pt, right=2pt, top=2pt, bottom=2pt
+  },
+  contentframe/.style={
+    enhanced,
+    colback=bgDark,
+    colframe=bgCardLight,
+    arc=3mm,
+    boxrule=0.9pt,
+    left=4pt, right=4pt, top=3pt, bottom=3pt,
+    coltext=textWhite,
+    shadow={1mm}{-1mm}{0mm}{black!40!bgDark}
   }
 }
 
@@ -132,13 +142,15 @@
 % SLIDE 01: TITLE / COVER
 % ==============================================================================
 \begin{frame}[plain]
+  \vspace{0.15cm}
+  \begin{tcolorbox}[contentframe, width=0.96\textwidth, center]
   \begin{center}
-    \vspace{0.3cm}
+    \vspace{0.1cm}
     {\fontsize{9pt}{11pt}\selectfont\color{cyanAccent}\textbf{DIGITAL SIGNAL PROCESSING $\cdot$ MIDTERM PROJECT 2026}} \\[6pt]
     {\fontsize{24pt}{27pt}\selectfont\color{textWhite}\textbf{Voice Activity Detection (VAD)}} \\[4pt]
     {\fontsize{13pt}{15pt}\selectfont\color{cyanGlow}\textit{Three Algorithms $\cdot$ Unified Quantitative Benchmark}} \\[14pt]
 
-    \begin{tcolorbox}[glowcard, width=0.88\textwidth]
+    \begin{tcolorbox}[glowcard, width=0.92\textwidth]
       \centering
       {\fontsize{9pt}{11pt}\selectfont\color{textMuted}\textbf{Student Group Members \& Algorithm Assignments:}}\\[6pt]
       \begin{columns}[c]
@@ -166,6 +178,7 @@
     \vspace{12pt}
     {\fontsize{8.5pt}{10pt}\selectfont\color{textMuted}\textbf{GROUP 08} $\;\vert\;$ 16 kHz Standard Audio $\;\vert\;$ Fully Pre-Executed Notebooks}
   \end{center}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -174,6 +187,7 @@
 \section{SHARED ARCHITECTURE $\cdot$ GROUP 08}
 \begin{frame}
   \frametitle{Unified End-to-End DSP Pipeline}
+  \begin{tcolorbox}[contentframe]
   \begin{center}
     \begin{tikzpicture}[
       node distance=0.20cm,
@@ -223,6 +237,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -231,6 +246,7 @@
 \section{STUDENT 1 $\cdot$ ALGORITHM 01}
 \begin{frame}
   \frametitle{Fixed Global Energy Threshold}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.62\textwidth}
       \begin{tcolorbox}[glowcard]
@@ -253,6 +269,7 @@
       \end{center}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -263,6 +280,7 @@
 \section{ALG 1 $\cdot$ CORE METHOD}
 \begin{frame}
   \frametitle{Iterative Bisection Loop on Duration Error}
+  \begin{tcolorbox}[contentframe]
   \begin{center}
     \begin{tikzpicture}[
       scale=0.92, transform shape,
@@ -275,7 +293,7 @@
       decision/.style={
         rectangle, rounded corners=2mm, fill=bgCard, draw=amberWarn, line width=0.8pt,
         text=textWhite, align=center, font=\fontsize{7pt}{8pt}\selectfont\bfseries,
-        minimum height=0.82cm, text width=2.05cm, inner sep=2pt
+        minimum height=0.82cm, text width=2.15cm, inner sep=2pt
       },
       outnode/.style={
         rectangle, rounded corners=2mm, fill=bgCard, draw=mintGreen, line width=1.1pt,
@@ -289,7 +307,7 @@
       \node[stepnode, right=of n1] (n2) {2. Midpoint\\{\color{textMuted}\tiny $T=\frac{T_{\min}+T_{\max}}{2}$}};
       \node[stepnode, right=of n2] (n3) {3. Evaluate VAD\\{\color{textMuted}\tiny + 200ms Bridge}};
       \node[stepnode, right=of n3] (n4) {4. Duration Err\\{\color{textMuted}\tiny $\Delta D = D_{\text{pred}} - D_{\text{gt}}$}};
-      \node[decision, right=of n4] (n5) {5. Branch Update\\{\color{amberWarn}\tiny $\Delta D > 0 \implies T_{\min}=T$\\\tiny $\Delta D \le 0 \implies T_{\max}=T$}};
+      \node[decision, right=of n4] (n5) {5. Branch Update\\{\color{amberWarn}\fontsize{4.8pt}{5.8pt}\selectfont $\Delta D > 0 \implies T_{\min}=T$\\\fontsize{4.8pt}{5.8pt}\selectfont $\Delta D \le 0 \implies T_{\max}=T$}};
       \node[outnode, right=of n5] (n6) {6. Converged\\{\color{mintGreen}\tiny $T_{\text{opt}} \approx 0.00348$\\\tiny Stop: $k=40$}};
 
       \draw[flowarr] (n1) -- (n2);
@@ -327,6 +345,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -335,33 +354,37 @@
 \section{ALG 1 $\cdot$ INTERMEDIATE RESULTS}
 \begin{frame}
   \frametitle{Intermediate Training: 40-Epoch Bisection Convergence}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
-    \begin{column}{0.64\textwidth}
-      \begin{tcolorbox}[whiteframe, height=4.50cm, valign=center]
-        \includegraphics[width=\linewidth, height=4.38cm, keepaspectratio]{figures/tt1_train_convergence.pdf}
+    \begin{column}{0.59\textwidth}
+      \begin{tcolorbox}[whiteframe, height=5.05cm, valign=center]
+        \includegraphics[width=\linewidth, height=4.85cm, keepaspectratio]{figures/tt1_train_convergence.png}
       \end{tcolorbox}
     \end{column}
 
-    \begin{column}{0.34\textwidth}
-      \begin{tcolorbox}[glowcard, height=2.15cm, valign=top, top=3pt, bottom=3pt]
-        {\fontsize{8.5pt}{9.5pt}\selectfont\color{cyanGlow}\textbf{40-Epoch Training Metrics}}\\[2pt]
-        {\fontsize{7.5pt}{8.5pt}\selectfont
-        $\bullet$ Search domain: $[10^{-4}, 0.05]$\\[1.5pt]
-        $\bullet$ Optimal threshold: $\mathbf{0.00348}$\\[1.5pt]
-        $\bullet$ Final signed error: $\approx 0.00\text{ ms}$\\[1.5pt]
-        $\bullet$ Training MAE: \textbf{11.25 ms}}
+    \begin{column}{0.39\textwidth}
+      \begin{tcolorbox}[glowcard, height=2.42cm, valign=top, top=5pt, bottom=5pt, left=8pt, right=8pt, boxsep=0pt]
+        {\fontsize{8.2pt}{9.5pt}\selectfont\color{cyanGlow}\textbf{40-Epoch Training Metrics}\par}
+        \vspace{3pt}
+        {\fontsize{7.2pt}{8.6pt}\selectfont
+        $\bullet$ Search domain: $[10^{-4}, 0.05]$\par\vspace{1.5pt}
+        $\bullet$ Optimal threshold: $\mathbf{0.00348}$\par\vspace{1.5pt}
+        $\bullet$ Final signed error: $\approx 0.00\text{ ms}$\par\vspace{1.5pt}
+        $\bullet$ Training MAE: \textbf{11.25 ms}\par}
       \end{tcolorbox}
-      \vskip0.20cm
-      \begin{tcolorbox}[mintcard, height=2.15cm, valign=top, top=3pt, bottom=3pt]
-        {\fontsize{8.5pt}{9.5pt}\selectfont\color{mintGreen}\textbf{Convergence Proof}}\\[2pt]
-        {\fontsize{7.5pt}{8.5pt}\selectfont
-        $\bullet$ Monotonic interval halving\\[1.5pt]
-        $\bullet$ Duration error balances to zero\\[1.5pt]
-        $\bullet$ Rapid stabilization within 5 epochs\\[1.5pt]
-        $\bullet$ Consistent across all 4 train files}
+      \vskip0.18cm
+      \begin{tcolorbox}[mintcard, height=2.42cm, valign=top, top=5pt, bottom=5pt, left=8pt, right=8pt, boxsep=0pt]
+        {\fontsize{8.2pt}{9.5pt}\selectfont\color{mintGreen}\textbf{Convergence Proof}\par}
+        \vspace{3pt}
+        {\fontsize{7.2pt}{8.6pt}\selectfont
+        $\bullet$ Monotonic interval halving\par\vspace{1.5pt}
+        $\bullet$ Duration error balances to zero\par\vspace{1.5pt}
+        $\bullet$ Rapid stabilization within 5 epochs\par\vspace{1.5pt}
+        $\bullet$ Consistent across all 4 train files\par}
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -370,33 +393,37 @@
 \section{ALG 1 $\cdot$ TEST EXECUTION}
 \begin{frame}
   \frametitle{Test Boundary Detection \& Error (4 Test Files)}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
-    \begin{column}{0.64\textwidth}
-      \begin{tcolorbox}[whiteframe, height=4.50cm, valign=center]
-        \includegraphics[width=\linewidth, height=4.38cm, keepaspectratio]{figures/tt1_composite.pdf}
+    \begin{column}{0.59\textwidth}
+      \begin{tcolorbox}[whiteframe, height=5.05cm, valign=center]
+        \includegraphics[width=\linewidth, height=4.85cm, keepaspectratio]{figures/tt1_composite.pdf}
       \end{tcolorbox}
     \end{column}
 
-    \begin{column}{0.34\textwidth}
-      \begin{tcolorbox}[mintcard, height=2.30cm, valign=top, top=3pt, bottom=3pt]
-        {\fontsize{8pt}{9pt}\selectfont\color{mintGreen}\textbf{Quantitative Test Metrics}}\\[2pt]
-        {\fontsize{6.8pt}{7.8pt}\selectfont
-        $\bullet$ phone\_F2: \textbf{12.5 ms} (RMSE 12.8 ms)\\[0.8pt]
-        $\bullet$ phone\_M2: \textbf{7.5 ms} (RMSE 7.9 ms)\\[0.8pt]
-        $\bullet$ studio\_F2: \textbf{12.5 ms} (RMSE 12.8 ms)\\[0.8pt]
-        $\bullet$ studio\_M2: \textbf{7.5 ms} (RMSE 7.9 ms)\\[0.8pt]
-        $\bullet$ \textbf{Mean MAE}: \textbf{10.00 ms} (RMSE 10.3 ms)}
+    \begin{column}{0.39\textwidth}
+      \begin{tcolorbox}[mintcard, height=2.75cm, valign=top, top=5pt, bottom=5pt, left=8pt, right=8pt, boxsep=0pt]
+        {\fontsize{8.2pt}{9.5pt}\selectfont\color{mintGreen}\textbf{Quantitative Test Metrics}\par}
+        \vspace{2.5pt}
+        {\fontsize{7.2pt}{8.6pt}\selectfont
+        $\bullet$ phone\_F2: \textbf{12.5 ms} (RMSE 12.8 ms)\par\vspace{1.5pt}
+        $\bullet$ phone\_M2: \textbf{7.5 ms} (RMSE 7.9 ms)\par\vspace{1.5pt}
+        $\bullet$ studio\_F2: \textbf{12.5 ms} (RMSE 12.8 ms)\par\vspace{1.5pt}
+        $\bullet$ studio\_M2: \textbf{7.5 ms} (RMSE 7.9 ms)\par\vspace{1.5pt}
+        $\bullet$ \textbf{Mean MAE}: \textbf{10.00 ms} (RMSE 10.3 ms)\par}
       \end{tcolorbox}
-      \vskip0.20cm
-      \begin{tcolorbox}[warncard, height=2.00cm, valign=top, top=3pt, bottom=3pt]
-        {\fontsize{8pt}{9pt}\selectfont\color{amberWarn}\textbf{Acoustic Critique}}\\[2pt]
-        {\fontsize{6.8pt}{7.8pt}\selectfont
-        $\bullet$ Error within $\pm 1$ hop ($10\text{ ms}$ grid)\\[0.8pt]
-        $\bullet$ Clean studio audio is highly exact\\[0.8pt]
-        $\bullet$ Phone trailing breath adds minor lag}
+      \vskip0.15cm
+      \begin{tcolorbox}[warncard, height=2.15cm, valign=top, top=5pt, bottom=5pt, left=8pt, right=8pt, boxsep=0pt]
+        {\fontsize{8.2pt}{9.5pt}\selectfont\color{amberWarn}\textbf{Acoustic Critique}\par}
+        \vspace{3pt}
+        {\fontsize{7.2pt}{8.6pt}\selectfont
+        $\bullet$ Error within $\pm 1$ hop ($10\text{ ms}$ grid)\par\vspace{2pt}
+        $\bullet$ Clean studio audio is highly exact\par\vspace{2pt}
+        $\bullet$ Phone trailing breath adds minor lag\par}
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -405,6 +432,7 @@
 \section{STUDENT 2 $\cdot$ ALGORITHM 02}
 \begin{frame}
   \frametitle{Dual-Feature Adaptive Histogram}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.62\textwidth}
       \begin{tcolorbox}[glowcard]
@@ -427,6 +455,7 @@
       \end{center}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -435,6 +464,7 @@
 \section{ALG 2 $\cdot$ CORE METHOD}
 \begin{frame}
   \frametitle{Unsupervised Dual-Feature Histogram (STE \& SC)}
+  \begin{tcolorbox}[contentframe]
   \begin{center}
     \begin{tikzpicture}[
       scale=0.89, transform shape,
@@ -467,31 +497,32 @@
   \end{center}
 
   \vspace{0pt}
-  \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \begin{tcolorbox}[darkcard, height=3.45cm, valign=top, top=3pt, bottom=3pt]
-        {\fontsize{8.5pt}{9.5pt}\selectfont\color{cyanGlow}\textbf{Peak Identification Workflow}}\\[2pt]
-        {\fontsize{7.2pt}{8.2pt}\selectfont
-        $\bullet$ \textbf{Features}: 25ms frame, 10ms hop (STE \& SC)\\[1.5pt]
-        $\bullet$ \textbf{Mode $M_1$}: First local peak (silence background)\\[1.5pt]
-        $\bullet$ \textbf{Mode $M_2$}: Second local peak (voiced speech onset)\\[1.5pt]
-        $\bullet$ \textbf{MA filter}: 5-point moving average smooths bins\\[1.5pt]
-        $\bullet$ \textbf{Adaptive}: Evaluated independently per file}
+  \begin{columns}[T, onlytextwidth]
+    \begin{column}{0.49\textwidth}
+      \begin{tcolorbox}[darkcard, height=3.60cm, valign=top, top=4pt, bottom=4pt, left=4pt, right=4pt]
+        {\fontsize{8.5pt}{9.5pt}\selectfont\color{cyanGlow}\textbf{Peak Identification Workflow}}\\[4pt]
+        {\fontsize{6.3pt}{8.0pt}\selectfont
+        $\bullet$ \textbf{Features}: STE \& Spectral Centroid (25ms frame, 10ms hop)\\[2.5pt]
+        $\bullet$ \textbf{Dual Histograms}: 100 linear bins + 5-point MA filter\\[2.5pt]
+        $\bullet$ \textbf{Mode $M_1$}: First local peak (silence / noise background)\\[2.5pt]
+        $\bullet$ \textbf{Mode $M_2$}: Second local peak (speech activity onset)\\[2.5pt]
+        $\bullet$ \textbf{Independent}: Unsupervised per-utterance adaptation}
       \end{tcolorbox}
     \end{column}
 
-    \begin{column}{0.48\textwidth}
-      \begin{tcolorbox}[mintcard, height=3.45cm, valign=top, top=3pt, bottom=3pt]
-        {\fontsize{8.5pt}{9.5pt}\selectfont\color{mintGreen}\textbf{Weighted Threshold \& Refinement}}\\[2pt]
-        {\fontsize{7.2pt}{8.2pt}\selectfont
-        $\bullet$ \textbf{Formula}: $T = \frac{5 M_1 + M_2}{6}$ for $T_E$ and $T_C$ ($W = 5$)\\[1.5pt]
-        $\bullet$ \textbf{Silence bias}: Protects low-energy unvoiced speech\\[1.5pt]
-        $\bullet$ \textbf{Adaptive range}: $T_E \in [0.015, 0.033]$, $T_C \in [0.020, 0.192]$\\[1.5pt]
-        $\bullet$ \textbf{Refine}: Logic AND + 200ms bridge + 10ms pad\\[1.5pt]
-        $\bullet$ \textbf{Accuracy}: Optimal test \textbf{Mean MAE = 12.50 ms}}
+    \begin{column}{0.49\textwidth}
+      \begin{tcolorbox}[mintcard, height=3.60cm, valign=top, top=4pt, bottom=4pt, left=4pt, right=4pt]
+        {\fontsize{8.5pt}{9.5pt}\selectfont\color{mintGreen}\textbf{Weighted Threshold \& Refinement}}\\[4pt]
+        {\fontsize{6.3pt}{8.0pt}\selectfont
+        $\bullet$ \textbf{Weighted Formula}: $T = (W \cdot M_1 + M_2) / (W + 1)$ with $W = 5$\\[2.5pt]
+        $\bullet$ \textbf{Dual Decision}: $\text{STE} \ge T_E$ \textbf{AND} $\text{SC} \ge T_C$ per frame\\[2.5pt]
+        $\bullet$ \textbf{Silence Bridge}: Merges internal gaps $< 200\text{ ms}$\\[2.5pt]
+        $\bullet$ \textbf{Boundary Padding}: $+10\text{ ms}$ ($+1$ frame) at onset \& offset\\[2.5pt]
+        $\bullet$ \textbf{Test Adaptation}: $T_E \in [0.015, 0.033]$, $T_C \in [0.020, 0.192]$}
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -500,6 +531,7 @@
 \section{ALG 2 $\cdot$ INTERMEDIATE RESULTS}
 \begin{frame}
   \frametitle{Train Boundary-Padding Sweep \& Onset Recovery}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.64\textwidth}
       \begin{tcolorbox}[whiteframe, height=4.50cm, valign=center]
@@ -528,6 +560,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -536,6 +569,7 @@
 \section{ALG 2 $\cdot$ TEST EXECUTION}
 \begin{frame}
   \frametitle{Test Boundary Detection \& Error (4 Test Files)}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.64\textwidth}
       \begin{tcolorbox}[whiteframe, height=4.50cm, valign=center]
@@ -564,6 +598,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -572,6 +607,7 @@
 \section{STUDENT 3 $\cdot$ ALGORITHM 03}
 \begin{frame}
   \frametitle{Parametric Gaussian Bayes Model}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.62\textwidth}
       \begin{tcolorbox}[glowcard]
@@ -594,6 +630,7 @@
       \end{center}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -602,6 +639,7 @@
 \section{ALG 3 $\cdot$ CORE METHOD}
 \begin{frame}
   \frametitle{From Empirical Statistics to Analytical Bayes Root}
+  \begin{tcolorbox}[contentframe]
   \begin{center}
     \begin{tikzpicture}[
       node distance=0.20cm,
@@ -651,6 +689,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -659,6 +698,7 @@
 \section{ALG 3 $\cdot$ INTERMEDIATE RESULTS}
 \begin{frame}
   \frametitle{Parametric Gaussian Fit \& Bayes Intersection}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.64\textwidth}
       \begin{tcolorbox}[whiteframe, height=4.50cm, valign=center]
@@ -667,7 +707,7 @@
     \end{column}
 
     \begin{column}{0.34\textwidth}
-      \begin{tcolorbox}[glowcard, height=2.15cm, valign=top, top=3pt, bottom=3pt]
+      \begin{tcolorbox}[glowcard, height=3cm, valign=top, top=3pt, bottom=3pt]
         {\fontsize{8pt}{9pt}\selectfont\color{cyanGlow}\textbf{Statistical Fit}}\\[1.5pt]
         {\fontsize{7pt}{8pt}\selectfont
         $\bullet$ Fitted Gaussians from 4 train files\\[1pt]
@@ -686,6 +726,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -694,6 +735,7 @@
 \section{ALG 3 $\cdot$ TEST EXECUTION}
 \begin{frame}
   \frametitle{Test Boundary Detection \& Error (4 Test Files)}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.64\textwidth}
       \begin{tcolorbox}[whiteframe, height=4.50cm, valign=center]
@@ -722,6 +764,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -730,6 +773,7 @@
 \section{TEST $\cdot$ PHONE F2}
 \begin{frame}
   \frametitle{Test Case 1: \texttt{phone\_F2.wav} $\cdot$ Comparative VAD}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.72\textwidth}
       \begin{tcolorbox}[whiteframe, height=4.65cm, valign=center]
@@ -764,6 +808,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -772,6 +817,7 @@
 \section{TEST $\cdot$ PHONE M2}
 \begin{frame}
   \frametitle{Test Case 2: \texttt{phone\_M2.wav} $\cdot$ Comparative VAD}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.72\textwidth}
       \begin{tcolorbox}[whiteframe, height=4.65cm, valign=center]
@@ -806,6 +852,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -814,6 +861,7 @@
 \section{TEST $\cdot$ STUDIO F2}
 \begin{frame}
   \frametitle{Test Case 3: \texttt{studio\_F2.wav} $\cdot$ Comparative VAD}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.72\textwidth}
       \begin{tcolorbox}[whiteframe, height=4.65cm, valign=center]
@@ -848,6 +896,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -856,6 +905,7 @@
 \section{TEST $\cdot$ STUDIO M2}
 \begin{frame}
   \frametitle{Test Case 4: \texttt{studio\_M2.wav} $\cdot$ Comparative VAD}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.72\textwidth}
       \begin{tcolorbox}[whiteframe, height=4.65cm, valign=center]
@@ -890,6 +940,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % % ==============================================================================
@@ -898,6 +949,7 @@
 \section{BENCHMARK $\cdot$ 4 TEST FILES}
 \begin{frame}
   \frametitle{Quantitative Performance Comparison Across Algorithms}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.55\textwidth}
       \begin{tcolorbox}[darkcard, height=2.95cm, valign=top, top=3pt, bottom=3pt]
@@ -932,6 +984,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -940,6 +993,7 @@
 \section{ALG 1 $\cdot$ CRITIQUE}
 \begin{frame}
   \frametitle{Algorithm 01: Strengths, Weaknesses, and Best Use Case}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[T]
     \begin{column}{0.31\textwidth}
       \begin{tcolorbox}[mintcard, height=3.85cm, valign=top]
@@ -979,6 +1033,7 @@
   \begin{center}
     {\fontsize{8.5pt}{10pt}\selectfont\color{textMuted}\textbf{Key Lesson:} Simplicity is an asset when background noise is stationary.}
   \end{center}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -987,6 +1042,7 @@
 \section{ALG 2 $\cdot$ CRITIQUE}
 \begin{frame}
   \frametitle{Algorithm 02: Dual-Feature Strengths, Weaknesses, and Best Use Case}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[T]
     \begin{column}{0.31\textwidth}
       \begin{tcolorbox}[mintcard, height=3.85cm, valign=top]
@@ -1029,6 +1085,7 @@
   \begin{center}
     {\fontsize{8.5pt}{10pt}\selectfont\color{textMuted}\textbf{Key Lesson:} Joint time-frequency histograms provide data-driven thresholds without labels.}
   \end{center}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -1037,6 +1094,7 @@
 \section{ALG 3 $\cdot$ CRITIQUE}
 \begin{frame}
   \frametitle{Algorithm 03: 1D Gaussian vs 4D Multivariate Model}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[T]
     \begin{column}{0.31\textwidth}
       \begin{tcolorbox}[mintcard, height=3.85cm, valign=top]
@@ -1076,6 +1134,32 @@
   \begin{center}
     {\fontsize{8.5pt}{10pt}\selectfont\color{textMuted}\textbf{Occam's Razor:} In small-sample regimes, parameter parsimony beats model complexity.}
   \end{center}
+  \end{tcolorbox}
+\end{frame}
+
+% ==============================================================================
+% SLIDE: CONCLUSION & THANK YOU
+% ==============================================================================
+\section{CONCLUSION $\cdot$ THANK YOU}
+\begin{frame}[plain]
+  \vspace{0.15cm}
+  \begin{tcolorbox}[contentframe, width=0.96\textwidth, center]
+  \begin{center}
+    \vspace{0.3cm}
+    {\fontsize{10pt}{12pt}\selectfont\color{cyanAccent}\textbf{DIGITAL SIGNAL PROCESSING $\cdot$ MIDTERM PROJECT 2026}} \\[8pt]
+    {\fontsize{24pt}{28pt}\selectfont\color{textWhite}\textbf{Thank You for Your Attention!}} \\[6pt]
+    {\fontsize{12pt}{15pt}\selectfont\color{cyanGlow}\textit{Group 08 $\cdot$ Voice Activity Detection (VAD)}} \\[14pt]
+
+    \begin{tcolorbox}[glowcard, width=0.88\textwidth]
+      \centering
+      {\fontsize{9pt}{11pt}\selectfont\color{textWhite}
+      \textbf{Questions \& Demonstration Session}\\[4pt]
+      \color{textMuted}\fontsize{8pt}{10pt}\selectfont
+      Full code, notebooks, and reproducible artifacts available in repository.\\[2pt]
+      \color{mintGreen}\textbf{Ready for live testing on any requested audio recording!}}
+    \end{tcolorbox}
+  \end{center}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -1084,6 +1168,7 @@
 \section{PREPROCESSING $\cdot$ STANDARDS}
 \begin{frame}
   \frametitle{Standard Parameters \& 200 ms Silence Bridging}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[c]
     \begin{column}{0.60\textwidth}
       \begin{tcolorbox}[whiteframe, height=4.50cm, valign=center]
@@ -1109,6 +1194,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -1117,6 +1203,7 @@
 \section{LIVE DEMO $\cdot$ SUBMISSION}
 \begin{frame}
   \frametitle{Four-Quadrant Display on Teacher Laptop}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[T]
     \begin{column}{0.24\textwidth}
       \begin{tcolorbox}[darkcard, height=2.30cm, valign=top]
@@ -1169,6 +1256,7 @@
     {\fontsize{8pt}{9.5pt}\selectfont
     Directory \texttt{03-Phan-doan-tin-hieu-tieng-noi-khoang-lang} contains group PDF slide + 3 individual notebooks with pre-computed outputs. Audio files strictly excluded as required.}
   \end{tcolorbox}
+  \end{tcolorbox}
 \end{frame}
 
 % ==============================================================================
@@ -1177,6 +1265,7 @@
 \section{DEFENSE $\cdot$ Q\&A}
 \begin{frame}
   \frametitle{Rebuttal for Critical Examination Questions}
+  \begin{tcolorbox}[contentframe]
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
       \begin{tcolorbox}[darkcard, height=1.90cm, valign=top]
@@ -1206,28 +1295,7 @@
       \end{tcolorbox}
     \end{column}
   \end{columns}
-\end{frame}
-
-% ==============================================================================
-% SLIDE: CONCLUSION & THANK YOU
-% ==============================================================================
-\section{CONCLUSION $\cdot$ THANK YOU}
-\begin{frame}[plain]
-  \begin{center}
-    \vspace{0.6cm}
-    {\fontsize{10pt}{12pt}\selectfont\color{cyanAccent}\textbf{DIGITAL SIGNAL PROCESSING $\cdot$ MIDTERM PROJECT 2026}} \\[8pt]
-    {\fontsize{24pt}{28pt}\selectfont\color{textWhite}\textbf{Thank You for Your Attention!}} \\[6pt]
-    {\fontsize{12pt}{15pt}\selectfont\color{cyanGlow}\textit{Group 08 $\cdot$ Voice Activity Detection (VAD)}} \\[14pt]
-
-    \begin{tcolorbox}[glowcard, width=0.84\textwidth]
-      \centering
-      {\fontsize{9pt}{11pt}\selectfont\color{textWhite}
-      \textbf{Questions \& Demonstration Session}\\[4pt]
-      \color{textMuted}\fontsize{8pt}{10pt}\selectfont
-      Full code, notebooks, and reproducible artifacts available in repository.\\[2pt]
-      \color{mintGreen}\textbf{Ready for live testing on any requested audio recording!}}
-    \end{tcolorbox}
-  \end{center}
+  \end{tcolorbox}
 \end{frame}
 
 \end{document}

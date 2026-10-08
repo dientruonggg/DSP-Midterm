@@ -1,17 +1,37 @@
-.agents/
+# Python & Environment
 .venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
-.ask
+
+# IDE & Editor files
 .vscode/
-*.log
-*.synctex.gz
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Agent & CLI scratch
+.agents/
+.ask
+
+# LaTeX build artifacts
 *.aux
+*.log
 *.nav
+*.out
 *.snm
 *.toc
-*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+
+# Temporary preview images
 preview_*.png
+test_slide*.png
 previews/
 
+# Private drafts
+Thu_Giai_Trinh_Gui_Thay.md

@@ -892,20 +892,63 @@ print(f"[*] UNIFIED OPTIMAL BAYES THRESHOLD: T_opt = {T_opt:.6f}")"""))
     cells.append(nbformat.v4.new_markdown_cell("""## SLIDE 5: GAUSSIAN DISTRIBUTIONS AND BAYES THRESHOLD VISUALIZATION
 Overlay Gaussian probability density functions (PDFs) and display the Bayes decision threshold $T_{opt}$."""))
 
-    cells.append(nbformat.v4.new_code_cell("""x_range = np.linspace(0.0, 0.015, 2000)
+    cells.append(nbformat.v4.new_code_cell("""x_range = np.linspace(-0.002, 0.6, 5000)
 pdf_sil = (1.0 / (sigma_sil * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x_range - mu_sil) / sigma_sil) ** 2)
 pdf_sp = (1.0 / (sigma_sp * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x_range - mu_sp) / sigma_sp) ** 2)
 
-fig, ax = plt.subplots(figsize=(10, 4.8), dpi=120)
-ax.plot(x_range, pdf_sil, label=f"Silence N(μ={mu_sil:.5f}, σ={sigma_sil:.5f})", color="#e53e3e", lw=2.0)
-ax.plot(x_range, pdf_sp, label=f"Speech N(μ={mu_sp:.5f}, σ={sigma_sp:.5f})", color="#3182ce", lw=2.0)
-ax.axvline(T_opt, color="#2b6cb0", linestyle="--", lw=2.2, label=f"Bayes Threshold T_opt = {T_opt:.6f}")
-ax.set_title("Gaussian Probability Density Functions and Optimal Bayes Threshold (TT3)", fontweight="bold")
-ax.set_xlabel("Normalized Short-Time Energy (STE)")
-ax.set_ylabel("Probability Density (PDF)")
-ax.set_xlim(0, 0.012)
-ax.legend(loc="upper right")
-plt.tight_layout()
+# Use log10 scale so BOTH distributions are visible (silence peak ~560 vs speech ~1.7)
+log_sil = np.log10(np.maximum(pdf_sil, 1e-8))
+log_sp = np.log10(np.maximum(pdf_sp, 1e-8))
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.2), dpi=120)
+fig.suptitle("Gaussian PDFs and Optimal Bayes Threshold (TT3)", fontsize=14, fontweight="bold", y=0.98)
+
+# --- PANEL A: Full range log scale ---
+ax1.plot(x_range, log_sil, color="#e53e3e", lw=2.4, label=f"Silence N(μ={mu_sil:.5f}, σ={sigma_sil:.5f})")
+ax1.plot(x_range, log_sp, color="#3182ce", lw=2.4, label=f"Speech N(μ={mu_sp:.5f}, σ={sigma_sp:.5f})")
+ax1.axvline(T_opt, color="#2b6cb0", linestyle="--", lw=2.2, label=f"Bayes T = {T_opt:.6f}")
+# Mark intersection
+idx_t = np.argmin(np.abs(x_range - T_opt))
+y_cross = log_sp[idx_t]
+ax1.plot(T_opt, y_cross, "o", color="#DC2626", markersize=10, zorder=5)
+ax1.annotate(f"Equal Likelihood\\nT = {T_opt:.5f}",
+             xy=(T_opt, y_cross), xytext=(0.08, y_cross + 0.8),
+             arrowprops=dict(arrowstyle="->", color="#DC2626", lw=1.8),
+             fontsize=10, fontweight="bold", color="#DC2626",
+             bbox=dict(boxstyle="round,pad=0.3", facecolor="white", edgecolor="#DC2626", alpha=0.9))
+ax1.fill_betweenx([-8, 4], 0, T_opt, color="#e53e3e", alpha=0.06)
+ax1.fill_betweenx([-8, 4], T_opt, 0.5, color="#3182ce", alpha=0.06)
+ax1.text(0.001, -6.5, "SILENCE", fontsize=10, fontweight="bold", color="#e53e3e", ha="center")
+ax1.text(0.25, -6.5, "SPEECH", fontsize=10, fontweight="bold", color="#3182ce", ha="center")
+ax1.set_title("A. Log₁₀ Probability Density (Full Range)", fontsize=11, fontweight="bold")
+ax1.set_xlabel("Normalized STE")
+ax1.set_ylabel("Log₁₀ Density")
+ax1.set_xlim(-0.002, 0.5)
+ax1.set_ylim(-7.5, 3.5)
+ax1.legend(loc="upper right", fontsize=8.5)
+ax1.grid(True, alpha=0.35)
+
+# --- PANEL B: Zoom transition zone ---
+ax2.plot(x_range, log_sil, color="#e53e3e", lw=2.6, label="Silence PDF")
+ax2.plot(x_range, log_sp, color="#3182ce", lw=2.6, label="Speech PDF")
+ax2.axvline(T_opt, color="#2b6cb0", linestyle="--", lw=2.4)
+ax2.plot(T_opt, y_cross, "o", color="#DC2626", markersize=12, zorder=5, label=f"Intersection T = {T_opt:.5f}")
+ax2.annotate(f"p(x|Sil) = p(x|Sp)\\nT = {T_opt:.5f}",
+             xy=(T_opt, y_cross), xytext=(T_opt + 0.006, y_cross + 1.2),
+             arrowprops=dict(arrowstyle="->", color="#DC2626", lw=2.0),
+             fontsize=10.5, fontweight="bold", color="#DC2626",
+             bbox=dict(boxstyle="round,pad=0.3", facecolor="#FEF2F2", edgecolor="#DC2626", alpha=0.95))
+ax2.axvspan(0, T_opt, color="#e53e3e", alpha=0.10, label="→ Classify Silence")
+ax2.axvspan(T_opt, 0.02, color="#3182ce", alpha=0.10, label="→ Classify Speech")
+ax2.set_title("B. Zoom: Decision Boundary Zone", fontsize=11, fontweight="bold")
+ax2.set_xlabel("Normalized STE")
+ax2.set_ylabel("Log₁₀ Density")
+ax2.set_xlim(-0.001, 0.02)
+ax2.set_ylim(-3, 3.5)
+ax2.legend(loc="upper right", fontsize=8.5)
+ax2.grid(True, alpha=0.35)
+
+plt.tight_layout(rect=[0, 0, 1, 0.95])
 plt.show()"""))
 
     # CELL 7a: apply_threshold
